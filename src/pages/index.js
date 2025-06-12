@@ -1,176 +1,360 @@
-import * as React from "react"
+import React, { useRef, useEffect, useState } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-const pageStyles = {
-  color: "#232129",
-  padding: 96,
-  fontFamily: "-apple-system, Roboto, sans-serif, serif",
-}
-const headingStyles = {
-  marginTop: 0,
-  marginBottom: 64,
-  maxWidth: 320,
-}
-const headingAccentStyles = {
-  color: "#663399",
-}
-const paragraphStyles = {
-  marginBottom: 48,
-}
-const codeStyles = {
-  color: "#8A6534",
-  padding: 4,
-  backgroundColor: "#FFF4DB",
-  fontSize: "1.25rem",
-  borderRadius: 4,
-}
-const listStyles = {
-  marginBottom: 96,
-  paddingLeft: 0,
-}
-const listItemStyles = {
-  fontWeight: 300,
-  fontSize: 24,
-  maxWidth: 560,
-  marginBottom: 30,
-}
+// Heroicon for the burger:
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
-const linkStyle = {
-  color: "#8954A8",
-  fontWeight: "bold",
-  fontSize: 16,
-  verticalAlign: "5%",
-}
+// Your static assets under /static/images (served at /images/…):
+import logoIcon from "../images/epitome-logo-icon.png";
 
-const docLinkStyle = {
-  ...linkStyle,
-  listStyleType: "none",
-  marginBottom: 24,
-}
+gsap.registerPlugin(ScrollTrigger);
 
-const descriptionStyle = {
-  color: "#232129",
-  fontSize: 14,
-  marginTop: 10,
-  marginBottom: 0,
-  lineHeight: 1.25,
-}
+const MainLanding = () => {
+  const bgVidRef = useRef(null);
+  const overlayRef = useRef(null);
+  const galleryRef = useRef(null);
+  const galleryInnerRef = useRef(null);
+  const featuredRef = useRef(null);
+  const videosInnerRef = useRef(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-const docLink = {
-  text: "Documentation",
-  url: "https://www.gatsbyjs.com/docs/",
-  color: "#8954A8",
-}
+  useEffect(() => {
+    // gsap.to(bgVidRef.current, {
+    //   opacity: 1,
+    //   ease: "none",
+    //   scrollTrigger: {
+    //     trigger: overlayRef.current,
+    //     start: "bottom top", // when overlay’s bottom reaches viewport top
+    //     end: "bottom top", // same point, so it only fires once
+    //     toggleActions: "play reverse play reverse",
+    //   },
+    // });
 
-const badgeStyle = {
-  color: "#fff",
-  backgroundColor: "#088413",
-  border: "1px solid #088413",
-  fontSize: 11,
-  fontWeight: "bold",
-  letterSpacing: 1,
-  borderRadius: 4,
-  padding: "4px 6px",
-  display: "inline-block",
-  position: "relative",
-  top: -2,
-  marginLeft: 10,
-  lineHeight: 1,
-}
+    // ——————————————
+    // (A) “Curtain-Up” Animation for the White Overlay (with Logo inside)
+    // ——————————————
 
-const links = [
-  {
-    text: "Tutorial",
-    url: "https://www.gatsbyjs.com/docs/tutorial/getting-started/",
-    description:
-      "A great place to get started if you're new to web development. Designed to guide you through setting up your first Gatsby site.",
-    color: "#E95800",
-  },
-  {
-    text: "How to Guides",
-    url: "https://www.gatsbyjs.com/docs/how-to/",
-    description:
-      "Practical step-by-step guides to help you achieve a specific goal. Most useful when you're trying to get something done.",
-    color: "#1099A8",
-  },
-  {
-    text: "Reference Guides",
-    url: "https://www.gatsbyjs.com/docs/reference/",
-    description:
-      "Nitty-gritty technical descriptions of how Gatsby works. Most useful when you need detailed information about Gatsby's APIs.",
-    color: "#BC027F",
-  },
-  {
-    text: "Conceptual Guides",
-    url: "https://www.gatsbyjs.com/docs/conceptual/",
-    description:
-      "Big-picture explanations of higher-level Gatsby concepts. Most useful for building understanding of a particular topic.",
-    color: "#0D96F2",
-  },
-  {
-    text: "Plugin Library",
-    url: "https://www.gatsbyjs.com/plugins",
-    description:
-      "Add functionality and customize your Gatsby site or app with thousands of plugins built by our amazing developer community.",
-    color: "#8EB814",
-  },
-  {
-    text: "Build and Host",
-    url: "https://www.gatsbyjs.com/cloud",
-    badge: true,
-    description:
-      "Now you’re ready to show the world! Give your Gatsby site superpowers: Build and host on Gatsby Cloud. Get started for free!",
-    color: "#663399",
-  },
-]
+    gsap.to(overlayRef.current, {
+      yPercent: -100,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: overlayRef.current,
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
 
-const IndexPage = () => {
+        onUpdate: (self) => {
+          // When the bottom of the overlay hits the top of the viewport,
+          // toggle the header's bg to black
+          // if (self.progress >= 1) {
+          //   console.log("hitting this");
+          //   bgVidRef.current.classList.remove("opacity-0");
+          // } else if (self.progress < 1) {
+          //   bgVidRef.current.classList.add("opacity-0");
+          // }
+          // fade in header video between 80% and 100% of this scroll
+          const raw = self.progress; // 0 → 1
+          const fadeStart = 0.95; // start fading at 80%
+          const fadeRange = 1 - fadeStart; // last 20% of scroll
+          let opacity = (raw - fadeStart) / fadeRange;
+          opacity = Math.min(Math.max(opacity, 0), 1); // clamp 0→1
+
+          bgVidRef.current.style.opacity = opacity;
+        },
+      },
+    });
+
+    const galleryEl = galleryRef.current;
+    const innerEl = galleryInnerRef.current;
+
+    if (galleryEl && innerEl) {
+      // Calculate how far the inner container must move to the left
+      const totalScrollWidth = innerEl.scrollWidth - window.innerWidth;
+
+      gsap.to(innerEl, {
+        x: -totalScrollWidth,
+        ease: "none",
+        scrollTrigger: {
+          trigger: galleryEl,
+          start: "top top",
+          end: () => `+=${innerEl.scrollWidth}`, // scroll distance = full width of inner
+          scrub: true,
+          pin: true,
+          pinSpacing: false,
+        },
+      });
+    }
+
+    // Cleanup on unmount
+    return () => {
+      ScrollTrigger.getAll().forEach((st) => st.kill());
+    };
+  }, []);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // 4× viewport pin so we have room for A→B, B→C, C→D, then release:
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: featuredRef.current,
+          start: "top-=80 top",
+          end: "+=200%", // 2× viewport height
+          scrub: true,
+          pin: true,
+        },
+      });
+
+      // Step 1 (0% → 100% scroll): bring in B over A
+      tl.to(
+        featuredRef.current.querySelector("video:nth-child(2)"), // B
+        {
+          xPercent: 90, // from -100% → 0% (covering A)
+          duration: 1,
+          ease: "none",
+        },
+        0 // at timeline position 0
+      );
+
+      // Step 2 (100% → 200%): bring in C over B
+      tl.to(
+        featuredRef.current.querySelector("video:nth-child(3)"), // C
+        {
+          xPercent: 80, // from -100% → 0%
+          duration: 1,
+          ease: "none",
+        },
+        1 // at timeline position 1 (i.e. after B finished)
+      );
+
+      // Step 3 (200% → 300%): bring in D over C
+      tl.to(
+        featuredRef.current.querySelector("video:nth-child(4)"), // D
+        {
+          xPercent: 70,
+          duration: 1,
+          ease: "none",
+        },
+        2 // at timeline position 2
+      );
+
+      // You could add a 4th tween if you want a little pause from 300% → 400%.
+    });
+
+    return () => ctx.revert();
+  }, []);
   return (
-    <main style={pageStyles}>
-      <h1 style={headingStyles}>
-        Congratulations
-        <br />
-        <span style={headingAccentStyles}>— you just made a Gatsby site! 🎉🎉🎉</span>
-      </h1>
-      <p style={paragraphStyles}>
-        Edit <code style={codeStyles}>src/pages/index.js</code> to see this page
-        update in real-time. 😎
-      </p>
-      <ul style={listStyles}>
-        <li style={docLinkStyle}>
-          <a
-            style={linkStyle}
-            href={`${docLink.url}?utm_source=starter&utm_medium=start-page&utm_campaign=minimal-starter`}
+    <main className="relative overflow-x-hidden">
+      <header className="fixed inset-x-0 top-0 z-50 h-20 overflow-hidden transition-colors duration-300">
+        {/* Background video inside header (fills the 80px / h-20 height) */}
+        <video
+          className="absolute inset-0 w-full h-full object-cover opacity-0"
+          src="/videos/header-sprinkles.mp4"
+          ref={bgVidRef}
+          autoPlay
+          muted
+          loop
+          playsInline
+        />
+
+        {/* Overlay on top of video for slight darkening (optional) */}
+        {/* <div className="absolute inset-0 bg-black/30" /> */}
+
+        {/* Header content (logo text + burger) */}
+        <div className="relative z-10 flex items-center justify-between h-full px-8">
+          {/* Left: text logo */}
+          <img
+            src="/images/logo_type_w.png"
+            alt="Logo Text"
+            className="h-8 sm:h-10"
+          />
+
+          {/* Right: burger icon */}
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="z-50 text-white focus:outline-none"
           >
-            {docLink.text}
-          </a>
-        </li>
-        {links.map(link => (
-          <li key={link.url} style={{ ...listItemStyles, color: link.color }}>
-            <span>
-              <a
-                style={linkStyle}
-                href={`${link.url}?utm_source=starter&utm_medium=start-page&utm_campaign=minimal-starter`}
-              >
-                {link.text}
-              </a>
-              {link.badge && (
-                <span style={badgeStyle} aria-label="New Badge">
-                  NEW!
-                </span>
-              )}
-              <p style={descriptionStyle}>{link.description}</p>
-            </span>
-          </li>
-        ))}
-      </ul>
-      <img
-        alt="Gatsby G Logo"
-        src="data:image/svg+xml,%3Csvg width='24' height='24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2a10 10 0 110 20 10 10 0 010-20zm0 2c-3.73 0-6.86 2.55-7.75 6L14 19.75c3.45-.89 6-4.02 6-7.75h-5.25v1.5h3.45a6.37 6.37 0 01-3.89 4.44L6.06 9.69C7 7.31 9.3 5.63 12 5.63c2.13 0 4 1.04 5.18 2.65l1.23-1.06A7.959 7.959 0 0012 4zm-8 8a8 8 0 008 8c.04 0 .09 0-8-8z' fill='%23639'/%3E%3C/svg%3E"
+            {menuOpen ? (
+              <XMarkIcon className="w-8 h-8 text-white cursor-pointer" />
+            ) : (
+              <Bars3Icon className="w-8 h-8 text-white cursor-pointer" />
+            )}
+          </button>
+        </div>
+      </header>
+
+      <video
+        className="fixed inset-0 w-full h-full object-cover -z-10"
+        src="/videos/bg-vid.mp4"
+        autoPlay
+        muted
+        loop
+        playsInline
       />
+
+      {menuOpen && (
+        <div className="fixed inset-0 z-40 bg-black/80 flex items-center justify-start">
+          <ul className="text-white text-9xl font-['Helvetica'] font-semibold pl-20 space-y-8">
+            <li>
+              <a href="#home" onClick={() => setMenuOpen(false)}>
+                Home
+              </a>
+            </li>
+            <li>
+              <a href="#about" onClick={() => setMenuOpen(false)}>
+                About
+              </a>
+            </li>
+            <li>
+              <a href="#work" onClick={() => setMenuOpen(false)}>
+                Work
+              </a>
+            </li>
+            <li>
+              <a href="#contact" onClick={() => setMenuOpen(false)}>
+                Contact
+              </a>
+            </li>
+          </ul>
+        </div>
+      )}
+
+      {/* ——————————————————————————————
+          (3) WHITE OVERLAY “CURTAIN” (z-10)
+            Contains the centered logo which scrolls off with the curtain
+      —————————————————————————————— */}
+      <div
+        ref={overlayRef}
+        className="fixed inset-0 z-10 flex justify-center items-center"
+      >
+        {/* Centered logo */}
+        <img
+          src="/images/logo_mark_w.png"
+          alt="Main Logo"
+          className="w-80 sm:w-96 md:w-3/12"
+        />
+      </div>
+
+      {/* ——————————————————————————————
+          (4) SPACER: room for the curtain to lift
+            Because the header is 80px tall (h-20), we add that here.
+      —————————————————————————————— */}
+      <div className="h-screen z-0 relative" />
+
+      {/* ————————————————————————————————————————————————
+          (5) ALL CONTENT BELOW THIS POINT SHOULD START 80px (h-20) BELOW THE HEADER
+      ———————————————————————————————————————————————— */}
+      <div className="pt-20">
+        {/* 20 = header height (h-20) */}
+
+        <section
+          ref={featuredRef}
+          id="featured-wrapper"
+          className="relative w-screen h-screen overflow-hidden bg-gray-50"
+        >
+          <div className="relative z-50 w-full py-12 px-8 bg-gray-50">
+            <h2 className="font-heading font-semibold text-[5rem] sm:text-[6rem] leading-none text-ellipsis">
+              YOU DON'T KNOW US? WE THE BEST BRO
+            </h2>
+          </div>
+
+          {/* (2) Below “What I Do”: two-column layout */}
+          <div className="absolute w-11/12 inset-0">
+            {/* VIDEO A: starts onscreen */}
+
+            <video
+              src="/videos/v1.mp4"
+              className="absolute inset-0 w-full h-full object-cover z-10 rounded-2xl"
+              autoPlay
+              loop
+              muted
+              playsInline
+            />
+
+            {/* VIDEO B: start off to the left */}
+            <video
+              src="/videos/v2.mp4"
+              className="absolute inset-0 w-full h-full object-cover z-20"
+              style={{ transform: "translateX(-100%)" }}
+              autoPlay
+              loop
+              muted
+              playsInline
+            />
+
+            {/* VIDEO C: also off to the left */}
+            <video
+              src="/videos/v3.mp4"
+              className="absolute inset-0 w-full h-full object-cover z-30"
+              style={{ transform: "translateX(-100%)" }}
+              autoPlay
+              loop
+              muted
+              playsInline
+            />
+
+            {/* VIDEO D: off to the left, on top of C in stacking order */}
+            <video
+              src="/videos/v4.mp4"
+              className="absolute inset-0 w-full h-full object-cover z-40"
+              style={{ transform: "translateX(-100%)" }}
+              autoPlay
+              loop
+              muted
+              playsInline
+            />
+          </div>
+          <div className="absolute bottom-16 right-20 -translate-y-1/2 z-50">
+            <h3 className="font-heading font-semibold text-[3rem] sm:text-[4rem] leading-none text-ellipsis rotate-90 origin-bottom-right ">
+              FEATURED WORK
+            </h3>
+          </div>
+        </section>
+
+        {/* (5c) FOOTER */}
+        {/* (New Section Before Footer) */}
+        <section className="w-full py-24 px-8 bg-gray-50">
+          <h2 className="text-6xl font-semibold uppercase font-sans tracking-tight text-center text-ellipsis">
+            Let's Build Something Great
+          </h2>
+          <h3 className="mt-6 max-w-3xl mx-auto text-lg text-gray-600 text-center leading-relaxed">
+            Whether you're looking to collaborate, hire, or just say hello — I'm
+            always open to discussing exciting opportunities and ideas.
+          </h3>
+        </section>
+
+        <footer className="w-full bg-gray-50 text-ellipsis py-24 px-12">
+          <div className="flex flex-col justify-center space-y-8">
+            <a
+              href="#about"
+              className="text-5xl font-bold hover:opacity-80 transition-all duration-300"
+            >
+              INSTAGRAM
+            </a>
+            <a
+              href="#work"
+              className="text-5xl font-bold hover:opacity-80 transition-all duration-300"
+            >
+              FACEBOOK
+            </a>
+            <a
+              href="#contact"
+              className="text-5xl font-bold hover:opacity-80 transition-all duration-300"
+            >
+              TWITTER
+            </a>
+            <a
+              href="#blog"
+              className="text-5xl font-bold hover:opacity-80 transition-all duration-300"
+            >
+              EMAIL
+            </a>
+            <img src="/images/logo_1f.png" className="w-96" />
+          </div>
+        </footer>
+      </div>
     </main>
-  )
-}
+  );
+};
 
-export default IndexPage
-
-export const Head = () => <title>Home Page</title>
+export default MainLanding;
