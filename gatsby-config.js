@@ -4,7 +4,7 @@
 module.exports = {
   siteMetadata: {
     title: `portfolio-website`,
-    siteUrl: `https://www.yourdomain.tld`
+    siteUrl: `https://www.yourdomain.tld`,
   },
-  plugins: ["gatsby-plugin-postcss"]
+  plugins: ["gatsby-plugin-postcss"],
 };

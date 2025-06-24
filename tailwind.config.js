@@ -19,6 +19,16 @@ module.exports = {
         lightNeutral: "#F5F3F7",
         midGray: "#B3A9B6",
       },
+      animation: {
+        marquee: "marquee 30s linear infinite",
+        "marquee-slow": "marquee 90s linear infinite",
+      },
+      keyframes: {
+        marquee: {
+          "0%": { transform: "translateX(0%)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
+      },
     },
   },
   plugins: [],

@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body,
+a,
+button {
+  cursor: none;
+}
+
+video {
+  position: relative;
+  z-index: 10; /* sit above overlays */
+  pointer-events: auto; /* ensure clicks/hovers go to the video */
+}
