@@ -4,7 +4,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Link } from "gatsby";
 
-import NavMenu from "../../components/menu";
+import NavMenu from "../../../components/menu";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -121,7 +121,7 @@ function AllWork() {
       <NavMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
       <video
         className="fixed inset-0 w-full h-full object-cover -z-10"
-        src="/videos/v1.mp4"
+        src="/videos/v2.mp4"
         autoPlay
         muted
         loop
@@ -129,7 +129,7 @@ function AllWork() {
       />
       <div className="fixed inset-10 z-10 flex justify-start items-end">
         <ul className="text-white text-2xl md:text-5xl font-heading font-semibold ">
-          <li className="mb-10 text-6xl">All Work</li>
+          <li className="mb-10 text-6xl">Stills</li>
 
           {brandList.map((el, i) => (
             <li className="brand-list">
@@ -151,6 +151,6 @@ export default AllWork;
 
 export const Head = () => (
   <>
-    <title>All Works | Epitome</title>;
+    <title>Stills | Epitome</title>;
   </>
 );

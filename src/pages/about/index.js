@@ -3,6 +3,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Footer from "../../components/footer";
+import NavMenu from "../../components/menu";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -171,33 +172,14 @@ export default function AboutPage() {
           </button>
         </div>
       </header>
+      <NavMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
+
       <section className="w-full h-[50vh] relative bg-[#111111]">
         <div className="absolute w-full text-5xl md:text-7xl text-left font-['Helvetica'] font-normal bottom-0 left-1/2 px-8 transform -translate-x-1/2 text-white pb-10">
           WE CREATE CONTENT THAT CAPTIVATES AND CONNECTS.
         </div>
       </section>
-      {menuOpen && (
-        <div className="fixed inset-0 z-30 bg-black/90 flex items-center justify-start">
-          <ul className="menu-items text-white text-5xl md:text-7xl sm:text-5xl font-['Helvetica'] font-normal pl-8 space-y-8">
-            {[
-              { name: "HOME", link: "/" },
-              { name: "RECENT", link: "/recent" },
-              { name: "WORK", link: "/allworks" },
-              { name: "ABOUT", link: "/about" },
-            ].map((item, i) => (
-              <li key={item.name} className="menu-item opacity-0">
-                <a
-                  className="transition-all duration-500 transform hover:opacity-30 md:hover:text-8xl"
-                  href={item.link}
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {item.name}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+
       <div className="h-screen z-0 relative" />
       <video
         className="fixed inset-0 w-full h-full object-cover -z-10"
@@ -341,3 +323,9 @@ export default function AboutPage() {
     </main>
   );
 }
+
+export const Head = () => (
+  <>
+    <title>About Us | Epitome</title>;
+  </>
+);

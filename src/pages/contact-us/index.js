@@ -172,3 +172,10 @@ const IndexPage = () => {
 };
 
 export default IndexPage;
+
+
+export const Head = () => (
+  <>
+    <title>Epitome | Contact Us</title>;
+  </>
+);

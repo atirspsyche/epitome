@@ -2,6 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Inter";
+  src: url('/static/fonts/inter/Inter-Medium.otf');
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Satoshi";
+  src: url('/static/fonts/satoshi/Satoshi-Bold.otf');
+  font-style: normal;
+  font-display: swap;
+}
+
+/* hide on small screens */
+@media (max-width: 640px) {
+  html,
+  body {
+    background-image: none;
+  }
+}
 body,
 a,
 button {
@@ -10,6 +30,37 @@ button {
 
 video {
   position: relative;
-  z-index: 10; /* sit above overlays */
-  pointer-events: auto; /* ensure clicks/hovers go to the video */
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.react-player video {
+  object-fit: cover !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* put in src/styles/global.css or tailwind layer */
+.reveal,
+.reveal-back {
+  display: block;
+  overflow: hidden;
+  line-height: 0.85;
+}
+.reveal .text,
+.reveal-back .text {
+  display: inline-block;
+  will-change: transform, opacity;
+  transform-origin: 50% 50%;
+}
+/* back layer visual tweak */
+.reveal-back {
+  transform: translateY(8px) translateX(-6px);
+  pointer-events: none;
+}
+.reveal-back .text {
+  opacity: 0.18;
+}
+.menu-items .menu-item {
+  position: relative;
 }

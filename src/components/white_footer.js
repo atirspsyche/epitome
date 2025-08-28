@@ -1,13 +1,13 @@
 import React, { useRef, useEffect, useState } from "react";
 
-export default function Footer() {
+export default function WhiteFooter() {
   return (
-    <footer className="w-full py-16 pb-8 px-8 text-primary font-heading">
-      <div className="grid grid-cols-2 w-full gap-y-8">
+    <footer className="w-full py-16 pb-8 px-8 text-secondary font-heading bg-primary z-40">
+      <div className="grid grid-cols-2 w-full gap-y-8 ">
         {/* Row 1–4: Left and Right aligned links */}
         <a
           href="https://wa.me/7400368811"
-          className="w-auto text-3xl md:text-7xl font-heading col-start-1 text-left hover:opacity-30 transition-all duration-500 hover:text-[5rem] "
+          className="w-auto text-3xl md:text-7xl font-normal col-start-1 text-left hover:opacity-30 transition-all duration-500 hover:text-[5rem] "
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -22,7 +22,7 @@ export default function Footer() {
 
         <a
           href="mailto:hello@yourdomain.com"
-          className="text-3xl md:text-7xl font-heading col-start-1 text-left hover:opacity-30 transition-all duration-500 hover:text-[5rem]"
+          className="text-3xl md:text-7xl font-normal col-start-1 text-left hover:opacity-30 transition-all duration-500 hover:text-[5rem]"
         >
           TEMP@GMAIL.COM
         </a>
@@ -35,7 +35,7 @@ export default function Footer() {
 
         <a
           href="#contact"
-          className="text-3xl md:text-7xl font-heading col-start-1 text-left hover:opacity-30 transition-all duration-500 hover:text-[5rem]"
+          className="text-3xl md:text-7xl font-normal col-start-1 text-left hover:opacity-30 transition-all duration-500 hover:text-[5rem]"
         >
           TWITTER
         </a>
@@ -48,7 +48,7 @@ export default function Footer() {
 
         <a
           href="#blog"
-          className="text-3xl md:text-7xl font-heading col-start-1 text-left hover:opacity-30 transition-all duration-500 hover:text-[5rem]"
+          className="text-3xl md:text-7xl font-normal col-start-1 text-left hover:opacity-30 transition-all duration-500 hover:text-[5rem]"
         >
           EMAIL
         </a>
@@ -70,7 +70,7 @@ export default function Footer() {
 
         {/* Row 7: Centered Logo */}
         <div className="col-span-2 flex justify-center">
-          <img src="/images/logomark_w.svg" className="w-24 mt-2" alt="Logo" />
+          <img src="/images/logomark.svg" className="w-24 mt-2" alt="Logo" />
         </div>
       </div>
     </footer>

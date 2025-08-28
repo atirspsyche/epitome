@@ -17,10 +17,343 @@
         "description": "Emily Pacillo Kern"
       }
     ],
-    "main_video_url": "",
-    "first_grid_image_url": "",
-    "first_grid_video_url": "",
-    "second_grid_image_url": "",
-    "second_grid_video_url": ""
+    "pagination_text": "Pagination / somethi / somethin",
+    "main_video_url": "https://player.vimeo.com/video/658915066?h=da7128b2c8",
+    "grids_media": [
+      {
+        "type": "image",
+        "url": "brands/society_tea/pic_1.png"
+      },
+      {
+        "type": "video",
+        "url": "brands/society_tea/vid_1.mp4"
+      },
+      {
+        "type": "image",
+        "url": "brands/society_tea/pic_2.png"
+      },
+      {
+        "type": "image",
+        "url": "brands/society_tea/pic_3.png"
+      },
+      {
+        "type": "video",
+        "url": "brands/society_tea/vid_2.mp4"
+      },
+      {
+        "type": "video",
+        "url": "brands/society_tea/vid_3.mp4"
+      },
+      {
+        "type": "image",
+        "url": "brands/society_tea/pic_4.png"
+      }
+    ]
+  },
+  {
+    "brand_name": "Society Tea",
+    "subtitle": "Into the Deep",
+    "about": "A spotlight film on Emmy Award-winning underwater cinematographer Alfredo Baroso / filmed on location in La Ventana, Mexico -- a small fishing village on the eastern side of Baja California. Our production team spent 2 days with Emmy Award-winning underwater cinematographer Alfredo Baroso at his home and in the Sea of Cortez, capturing his heartfelt story and awe-inspiring filming process",
+    "credits": [
+      {
+        "title": "Executive Producers",
+        "description": "Luke McCain & Ryan Knight"
+      },
+      {
+        "title": "Directors",
+        "description": "Andi Lipo"
+      },
+      {
+        "title": "Head of Production",
+        "description": "Emily Pacillo Kern"
+      }
+    ],
+    "pagination_text": "Pagination / Motion / Society Tea",
+    "main_video_url": "https://player.vimeo.com/video/655604262?h=8fb2a1624b",
+    "grids_media": [
+      {
+        "type": "image",
+        "url": "brands/society_tea/pic_1.png"
+      },
+      {
+        "type": "video",
+        "url": "brands/society_tea/vid_1.mp4"
+      },
+      {
+        "type": "image",
+        "url": "brands/society_tea/pic_2.png"
+      },
+      {
+        "type": "image",
+        "url": "brands/society_tea/pic_3.png"
+      },
+      {
+        "type": "video",
+        "url": "brands/society_tea/vid_2.mp4"
+      },
+      {
+        "type": "video",
+        "url": "brands/society_tea/vid_3.mp4"
+      },
+      {
+        "type": "image",
+        "url": "brands/society_tea/pic_4.png"
+      }
+    ]
+  },
+  {
+    "brand_name": "Brand 3",
+    "subtitle": "Into the Deep",
+    "about": "A spotlight film on Emmy Award-winning underwater cinematographer Alfredo Baroso / filmed on location in La Ventana, Mexico -- a small fishing village on the eastern side of Baja California. Our production team spent 2 days with Emmy Award-winning underwater cinematographer Alfredo Baroso at his home and in the Sea of Cortez, capturing his heartfelt story and awe-inspiring filming process",
+    "credits": [
+      {
+        "title": "Executive Producers",
+        "description": "Luke McCain & Ryan Knight"
+      },
+      {
+        "title": "Directors",
+        "description": "Andi Lipo"
+      },
+      {
+        "title": "Head of Production",
+        "description": "Emily Pacillo Kern"
+      }
+    ],
+    "pagination_text": "Pagination / Motion / Society Tea",
+    "main_video_url": "https://player.vimeo.com/video/655604262?h=8fb2a1624b",
+    "grids_media": [
+      {
+        "type": "image",
+        "url": "brands/society_tea/pic_1.png"
+      },
+      {
+        "type": "video",
+        "url": "brands/society_tea/vid_1.mp4"
+      },
+      {
+        "type": "image",
+        "url": "brands/society_tea/pic_2.png"
+      },
+      {
+        "type": "image",
+        "url": "brands/society_tea/pic_3.png"
+      },
+      {
+        "type": "video",
+        "url": "brands/society_tea/vid_2.mp4"
+      },
+      {
+        "type": "video",
+        "url": "brands/society_tea/vid_3.mp4"
+      },
+      {
+        "type": "image",
+        "url": "brands/society_tea/pic_4.png"
+      }
+    ]
+  },
+  {
+    "brand_name": "Brand 4",
+    "subtitle": "Into the Deep",
+    "about": "A spotlight film on Emmy Award-winning underwater cinematographer Alfredo Baroso / filmed on location in La Ventana, Mexico -- a small fishing village on the eastern side of Baja California. Our production team spent 2 days with Emmy Award-winning underwater cinematographer Alfredo Baroso at his home and in the Sea of Cortez, capturing his heartfelt story and awe-inspiring filming process",
+    "credits": [
+      {
+        "title": "Executive Producers",
+        "description": "Luke McCain & Ryan Knight"
+      },
+      {
+        "title": "Directors",
+        "description": "Andi Lipo"
+      },
+      {
+        "title": "Head of Production",
+        "description": "Emily Pacillo Kern"
+      }
+    ],
+    "pagination_text": "Pagination / Motion / Society Tea",
+    "main_video_url": "https://player.vimeo.com/video/655604262?h=8fb2a1624b",
+    "grids_media": [
+      {
+        "type": "image",
+        "url": "brands/society_tea/pic_1.png"
+      },
+      {
+        "type": "video",
+        "url": "brands/society_tea/vid_1.mp4"
+      },
+      {
+        "type": "image",
+        "url": "brands/society_tea/pic_2.png"
+      },
+      {
+        "type": "image",
+        "url": "brands/society_tea/pic_3.png"
+      },
+      {
+        "type": "video",
+        "url": "brands/society_tea/vid_2.mp4"
+      },
+      {
+        "type": "video",
+        "url": "brands/society_tea/vid_3.mp4"
+      },
+      {
+        "type": "image",
+        "url": "brands/society_tea/pic_4.png"
+      }
+    ]
+  },
+  {
+    "brand_name": "Brand 5",
+    "subtitle": "Into the Deep",
+    "about": "A spotlight film on Emmy Award-winning underwater cinematographer Alfredo Baroso / filmed on location in La Ventana, Mexico -- a small fishing village on the eastern side of Baja California. Our production team spent 2 days with Emmy Award-winning underwater cinematographer Alfredo Baroso at his home and in the Sea of Cortez, capturing his heartfelt story and awe-inspiring filming process",
+    "credits": [
+      {
+        "title": "Executive Producers",
+        "description": "Luke McCain & Ryan Knight"
+      },
+      {
+        "title": "Directors",
+        "description": "Andi Lipo"
+      },
+      {
+        "title": "Head of Production",
+        "description": "Emily Pacillo Kern"
+      }
+    ],
+    "pagination_text": "Pagination / Motion / Society Tea",
+    "main_video_url": "https://player.vimeo.com/video/655604262?h=8fb2a1624b",
+    "grids_media": [
+      {
+        "type": "image",
+        "url": "brands/society_tea/pic_1.png"
+      },
+      {
+        "type": "video",
+        "url": "brands/society_tea/vid_1.mp4"
+      },
+      {
+        "type": "image",
+        "url": "brands/society_tea/pic_2.png"
+      },
+      {
+        "type": "image",
+        "url": "brands/society_tea/pic_3.png"
+      },
+      {
+        "type": "video",
+        "url": "brands/society_tea/vid_2.mp4"
+      },
+      {
+        "type": "video",
+        "url": "brands/society_tea/vid_3.mp4"
+      },
+      {
+        "type": "image",
+        "url": "brands/society_tea/pic_4.png"
+      }
+    ]
+  },
+  {
+    "brand_name": "Brand 6",
+    "subtitle": "Into the Deep",
+    "about": "A spotlight film on Emmy Award-winning underwater cinematographer Alfredo Baroso / filmed on location in La Ventana, Mexico -- a small fishing village on the eastern side of Baja California. Our production team spent 2 days with Emmy Award-winning underwater cinematographer Alfredo Baroso at his home and in the Sea of Cortez, capturing his heartfelt story and awe-inspiring filming process",
+    "credits": [
+      {
+        "title": "Executive Producers",
+        "description": "Luke McCain & Ryan Knight"
+      },
+      {
+        "title": "Directors",
+        "description": "Andi Lipo"
+      },
+      {
+        "title": "Head of Production",
+        "description": "Emily Pacillo Kern"
+      }
+    ],
+    "pagination_text": "Pagination / Motion / Society Tea",
+    "main_video_url": "https://player.vimeo.com/video/655604262?h=8fb2a1624b",
+    "grids_media": [
+      {
+        "type": "image",
+        "url": "brands/society_tea/pic_1.png"
+      },
+      {
+        "type": "video",
+        "url": "brands/society_tea/vid_1.mp4"
+      },
+      {
+        "type": "image",
+        "url": "brands/society_tea/pic_2.png"
+      },
+      {
+        "type": "image",
+        "url": "brands/society_tea/pic_3.png"
+      },
+      {
+        "type": "video",
+        "url": "brands/society_tea/vid_2.mp4"
+      },
+      {
+        "type": "video",
+        "url": "brands/society_tea/vid_3.mp4"
+      },
+      {
+        "type": "image",
+        "url": "brands/society_tea/pic_4.png"
+      }
+    ]
+  },
+  {
+    "brand_name": "Brand 7",
+    "subtitle": "Into the Deep",
+    "about": "A spotlight film on Emmy Award-winning underwater cinematographer Alfredo Baroso / filmed on location in La Ventana, Mexico -- a small fishing village on the eastern side of Baja California. Our production team spent 2 days with Emmy Award-winning underwater cinematographer Alfredo Baroso at his home and in the Sea of Cortez, capturing his heartfelt story and awe-inspiring filming process",
+    "credits": [
+      {
+        "title": "Executive Producers",
+        "description": "Luke McCain & Ryan Knight"
+      },
+      {
+        "title": "Directors",
+        "description": "Andi Lipo"
+      },
+      {
+        "title": "Head of Production",
+        "description": "Emily Pacillo Kern"
+      }
+    ],
+    "pagination_text": "Pagination / Motion / Society Tea",
+    "main_video_url": "https://player.vimeo.com/video/655604262?h=8fb2a1624b",
+    "grids_media": [
+      {
+        "type": "image",
+        "url": "brands/society_tea/pic_1.png"
+      },
+      {
+        "type": "video",
+        "url": "brands/society_tea/vid_1.mp4"
+      },
+      {
+        "type": "image",
+        "url": "brands/society_tea/pic_2.png"
+      },
+      {
+        "type": "image",
+        "url": "brands/society_tea/pic_3.png"
+      },
+      {
+        "type": "video",
+        "url": "brands/society_tea/vid_2.mp4"
+      },
+      {
+        "type": "video",
+        "url": "brands/society_tea/vid_3.mp4"
+      },
+      {
+        "type": "image",
+        "url": "brands/society_tea/pic_4.png"
+      }
+    ]
   }
 ]

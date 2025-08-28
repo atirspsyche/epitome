@@ -8,6 +8,8 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 // Your static assets under /static/images (served at /images/…):
 import logoIcon from "../images/epitome-logo-icon.png";
+import NavMenu from "../components/menu";
+import SideGradients from "../components/grad-sides";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -131,7 +133,7 @@ const MainLanding = () => {
         scrollTrigger: {
           trigger: featuredRef.current,
           start: "top top",
-          end: "+=200%", // 2× viewport height
+          end: "+=250%", // 2× viewport height
           scrub: true,
           pin: true,
         },
@@ -169,6 +171,15 @@ const MainLanding = () => {
         },
         2 // at timeline position 2
       );
+      tl.to(
+        featuredRef.current.querySelector("video:nth-child(5)"), // D
+        {
+          xPercent: 80,
+          duration: 1,
+          ease: "none",
+        },
+        3 // at timeline position 2
+      );
 
       // You could add a 4th tween if you want a little pause from 300% → 400%.
     });
@@ -198,7 +209,9 @@ const MainLanding = () => {
     // 1) Header scrollTrigger …
     // 2) Curtain scrollTrigger …
     // 3) Gallery scrollTrigger …
-
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
     // 4) Splash animation
     if (showSplash && splashRef.current) {
       document.body.style.overflow = "hidden";
@@ -225,12 +238,20 @@ const MainLanding = () => {
           ref={splashRef}
           className="fixed inset-0 z-50 bg-white flex items-center justify-center"
         >
-          <img src="/images/logomark.svg" alt="Splash Logo" className="w-80" />
+          {/* <img src="/images/logomark.svg" alt="Splash Logo" className="w-80" /> */}
+          <video
+            src="/videos/epi.mp4"
+            className="w-1/3"
+            autoPlay
+            muted
+            playsInline
+            preload="metadata"
+            poster="/images/epi1.png"
+          />
         </div>
       )}
 
       <header className="fixed inset-x-0 top-0 z-40 h-20 overflow-hidden transition-colors duration-300">
-        {/* Background video inside header (fills the 80px / h-20 height) */}
         <video
           className="absolute inset-0 w-full h-full object-cover opacity-0"
           src="/videos/header-sprinkles.mp4"
@@ -262,7 +283,7 @@ const MainLanding = () => {
           >
             {/* Hamburger */}
             <Bars3Icon
-              className={`absolute inset-0 w-full h-full text-white transition-opacity duration-500 ease-in-out ${
+              className={`absolute inset-0 w-full h-full text-primary transition-opacity duration-500 ease-in-out ${
                 menuOpen
                   ? "opacity-0 scale-75 rotate-45"
                   : "opacity-100 scale-100 rotate-0"
@@ -271,7 +292,7 @@ const MainLanding = () => {
 
             {/* Close */}
             <XMarkIcon
-              className={`absolute inset-0 w-full h-full text-white transition-opacity duration-500 ease-in-out ${
+              className={`absolute inset-0 w-full h-full text-primary transition-opacity duration-500 ease-in-out ${
                 menuOpen
                   ? "opacity-100 scale-100 rotate-0"
                   : "opacity-0 scale-75 rotate-45"
@@ -283,35 +304,14 @@ const MainLanding = () => {
 
       <video
         className="fixed inset-0 w-full h-full object-cover -z-10"
-        src="/videos/bg-vid.mp4"
+        src="/videos/bg/home.mp4"
         autoPlay
         muted
         loop
         playsInline
       />
 
-      {menuOpen && (
-        <div className="fixed inset-0 z-30 bg-black/90 flex items-center justify-start">
-          <ul className="menu-items text-white text-5xl md:text-7xl sm:text-5xl font-['Helvetica'] font-normal pl-8 space-y-8">
-            {[
-              { name: "HOME", link: "/" },
-              { name: "RECENT", link: "/recent" },
-              { name: "WORK", link: "/allworks" },
-              { name: "ABOUT", link: "/about" },
-            ].map((item, i) => (
-              <li key={item.name} className="menu-item opacity-0">
-                <a
-                  className="transition-all duration-500 transform hover:opacity-30 md:hover:text-8xl"
-                  href={item.link}
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {item.name}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <NavMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
 
       {/* ——————————————————————————————
           (3) WHITE OVERLAY “CURTAIN” (z-10)
@@ -325,45 +325,48 @@ const MainLanding = () => {
         <img
           src="/images/logomark_w.svg"
           alt="Main Logo"
-          className="w-80 sm:w-96 md:w-5/12"
+          className="w-80 sm:w-96 md:w-7/12"
         />
       </div>
 
       <div className="h-screen z-0 relative" />
 
       <div className="pt-20">
-        <section id="featured-wrapper" className="w-screen bg-[#111111]">
+        <section id="featured-wrapper" className="w-screen bg-secondary">
           <div className="w-full pt-12 px-8">
             <h2
               className="
+
                         font-heading font-semibold
                         text-[2rem] sm:text-[2rem] lg:text-[5rem]
                         leading-tight
                         text-left
                         bg-clip-text text-transparent
-                        bg-gradient-to-r from-[#a18cd1] to-[#fbc2eb]
+                        bg-gradient-to-r from-hanBlue to-coralRed
+                        uppercase
                         "
             >
-              YOU DON'T KNOW US? WE'RE THE BEST, BRO.
+              Neque porro quisquam est qui dolorem
             </h2>
           </div>
-          <div className="w-full text-right text-xs text-white pb-12 px-8 mt-5 md:mt-0">
+          <div className="w-full text-right text-xs text-white pb-12 px-8 mt-5 font-body md:mt-0 underline underline-offset-2">
             LEARN MORE
           </div>
 
           <div className="relative py-1">
-            <div className="absolute inset-x-0 top-1/2 h-0.5 bg-gradient-to-r from-transparent via-lightNeutral to-transparent" />
+            <div className="absolute inset-x-0 top-1/2 h-0.5 bg-gradient-to-r from-transparent via-hanBlue to-transparent" />
           </div>
           <div className="block md:hidden px-4 py-12">
-            <h2 className="text-5xl font-heading font-semibold text-center mb-8  bg-gradient-to-r from-lightNeutral to-secondary bg-clip-text text-transparent">
+            <h2 className="text-5xl font-heading font-semibold text-center mb-8 bg-gradient-to-r from-coralRed to-hanBlue bg-clip-text text-transparent">
               FEATURED
             </h2>
             <div className="space-y-8">
               {[
-                "/videos/v1.mp4",
-                "/videos/v2.mp4",
-                "/videos/v3.mp4",
-                "/videos/v4.mp4",
+                "/videos/featured/akshat.mp4",
+                "/videos/featured/oaken.mp4",
+                "/videos/featured/dzire.mp4",
+                "/videos/featured/ballentines.mp4",
+                "/videos/featured/kingfisher.mp4",
               ].map((src, i) => (
                 <div
                   key={i}
@@ -377,8 +380,8 @@ const MainLanding = () => {
                     muted
                     playsInline
                   />
-                  <div className="absolute bottom-4 left-4 bg-black/50 text-white px-2 py-1 rounded">
-                    Project {i + 1}
+                  <div className="absolute bottom-4 left-4 bg-secondary/50 text-primary px-2 py-1 rounded">
+                    {src.split("/").at(-1).split(".").at(0)}
                   </div>
                 </div>
               ))}
@@ -395,7 +398,7 @@ const MainLanding = () => {
                 {/* VIDEO A: starts onscreen */}
 
                 <video
-                  src="/videos/v1.mp4"
+                  src="/videos/featured/akshat.mp4"
                   className="absolute inset-0 w-full h-full object-cover z-10 rounded-3xl"
                   autoPlay
                   loop
@@ -405,7 +408,7 @@ const MainLanding = () => {
 
                 {/* VIDEO B: start off to the left */}
                 <video
-                  src="/videos/v2.mp4"
+                  src="/videos/featured/oaken.mp4"
                   className="absolute inset-0 w-full h-full object-cover z-20 rounded-3xl"
                   style={{ transform: "translateX(-100%)" }}
                   autoPlay
@@ -416,7 +419,7 @@ const MainLanding = () => {
 
                 {/* VIDEO C: also off to the left */}
                 <video
-                  src="/videos/v3.mp4"
+                  src="/videos/featured/dzire.mp4"
                   className="absolute inset-0 w-full h-full object-cover z-30 rounded-3xl"
                   style={{ transform: "translateX(-100%)" }}
                   autoPlay
@@ -427,8 +430,18 @@ const MainLanding = () => {
 
                 {/* VIDEO D: off to the left, on top of C in stacking order */}
                 <video
-                  src="/videos/v4.mp4"
+                  src="/videos/featured/ballentines.mp4"
                   className="absolute inset-0 w-full h-full object-cover z-40 rounded-3xl"
+                  style={{ transform: "translateX(-100%)" }}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                />
+
+                <video
+                  src="/videos/featured/kingfisher.mp4"
+                  className="absolute inset-0 w-full h-full object-cover z-50 rounded-3xl"
                   style={{ transform: "translateX(-100%)" }}
                   autoPlay
                   loop
@@ -444,7 +457,7 @@ const MainLanding = () => {
                 className="
                           font-heading font-semibold
                           text-[7rem] sm:text-[8rem] leading-tight
-                          bg-gradient-to-b from-lightNeutral to-secondary
+                          bg-gradient-to-b from-coralRed to-hanBlue
                           bg-clip-text text-transparent
                           [writing-mode:vertical-rl] [text-orientation:sideways-right] [direction:ltr]
                           "
@@ -456,32 +469,46 @@ const MainLanding = () => {
         </section>
         {/* (5c) FOOTER */}
         {/* (New Section Before Footer) */}
-        <section className="w-full py-5 px-8 bg-[#111111]">
+        <section className="w-full py-5 px-8 bg-secondary">
+          <div className="w-full h-0.5 bg-gradient-to-r from-hanBlue to-secondary my-4" />
+
           <div className="w-full">
             <h2
               className="
                         font-heading font-semibold
-                        text-[2.5rem] sm:text-[5rem] lg:text-[6rem]
+                        text-[2rem] sm:text-[3rem] lg:text-[4rem]
                         leading-tight
                         text-left
                         bg-clip-text text-transparent
-                        bg-gradient-to-r from-[#a18cd1] to-[#fbc2eb]
+                        bg-gradient-to-br from-hanBlue to-primary
                         "
             >
               {String("Other Works").toUpperCase()}
             </h2>
           </div>
-          <div className="w-full h-0.5 bg-gradient-to-r from-lightNeutral to-secondary my-4" />
 
           <section id="other-works" className="w-full py-10 ">
-            <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-4 gap-6">
-              <div className="relative rounded-xl overflow-hidden md:col-span-2 md:row-span-4">
-                <div className="absolute top-0 left-0 bg-black/60 text-white text-sm font-medium px-3 py-1 z-10">
-                  Project 1
+            <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-3 gap-6 ">
+              <div className="relative rounded-xl overflow-hidden md:col-span-1 md:row-span-3">
+                <div className="absolute top-0 left-0 bg-black/60 text-white text-sm font-body px-3 py-1 z-20">
+                  Vivo
                 </div>
                 <video
                   className="w-full h-full object-cover"
-                  src={`/videos/v1.mp4`} // Rotating sample videos
+                  src={`/videos/other_work/04.mp4`} // Rotating sample videos
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                />
+              </div>
+              <div className="relative rounded-xl overflow-hidden md:col-span-2 md:row-span-3 ">
+                <div className="absolute top-0 left-0 bg-black/60 text-white text-sm font-body px-3 py-1 z-20">
+                  Baleno
+                </div>
+                <video
+                  className="w-full h-full object-cover"
+                  src={`/videos/other_work/05.mp4`} // Rotating sample videos
                   autoPlay
                   loop
                   muted
@@ -489,25 +516,12 @@ const MainLanding = () => {
                 />
               </div>
               <div className="relative rounded-xl overflow-hidden md:col-span-1 md:row-span-3">
-                <div className="absolute top-0 left-0 bg-black/60 text-white text-sm font-medium px-3 py-1 z-10">
-                  Project 2
+                <div className="absolute top-0 left-0 bg-black/60 text-white text-sm font-body px-3 py-1 z-20">
+                  BP Kanika
                 </div>
                 <video
                   className="w-full h-full object-cover"
-                  src={`/videos/v1.mp4`} // Rotating sample videos
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
-              </div>
-              <div className="relative rounded-xl overflow-hidden md:col-span-1 md:row-span-2">
-                <div className="absolute top-0 left-0 bg-black/60 text-white text-sm font-medium px-3 py-1 z-10">
-                  Project 3
-                </div>
-                <video
-                  className="w-full h-full object-cover"
-                  src={`/videos/v1.mp4`} // Rotating sample videos
+                  src={`/videos/other_work/06.mp4`} // Rotating sample videos
                   autoPlay
                   loop
                   muted
@@ -515,14 +529,56 @@ const MainLanding = () => {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-3 gap-6 mt-20">
-              <div className="relative rounded-xl overflow-hidden md:col-span-1 md:row-span-2">
-                <div className="absolute top-0 left-0 bg-black/60 text-white text-sm font-medium px-3 py-1 z-10">
-                  Project 1
+            <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-3 gap-6 mt-10">
+              <div className="relative rounded-xl overflow-hidden md:col-span-2 md:row-span-3">
+                <div className="absolute top-0 left-0 bg-black/60 text-white text-sm font-body px-3 py-1 z-20">
+                  Society Tea
                 </div>
                 <video
                   className="w-full h-full object-cover"
-                  src={`/videos/v1.mp4`} // Rotating sample videos
+                  src={`/videos/other_work/01.mp4`} // Rotating sample videos
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                />
+              </div>
+              <div className="relative rounded-xl overflow-hidden md:col-span-1 md:row-span-3">
+                <div className="absolute top-0 left-0 bg-black/60 text-white text-sm font-body px-3 py-1 z-20">
+                  Tata Punch
+                </div>
+                <video
+                  className="w-full h-full object-cover"
+                  src={`/videos/other_work/02.mp4`} // Rotating sample videos
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                />
+              </div>
+              <div className="relative rounded-xl overflow-hidden md:col-span-1 md:row-span-3">
+                <div className="absolute top-0 left-0 bg-black/60 text-white text-sm font-body px-3 py-1 z-20">
+                  Tata Punch
+                </div>
+                <video
+                  className="w-full h-full object-cover"
+                  src={`/videos/other_work/03.mp4`} // Rotating sample videos
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-3 gap-6 mt-10">
+              <div className="relative rounded-xl overflow-hidden md:col-span-1 md:row-span-3">
+                <div className="absolute top-0 left-0 bg-black/60 text-white text-sm font-body px-3 py-1 z-20">
+                  Chivas
+                </div>
+                <video
+                  className="w-full h-full object-cover"
+                  src={`/videos/other_work/07.mp4`} // Rotating sample videos
                   autoPlay
                   loop
                   muted
@@ -530,66 +586,25 @@ const MainLanding = () => {
                 />
               </div>
               <div className="relative rounded-xl overflow-hidden md:col-span-2 md:row-span-3">
-                <div className="absolute top-0 left-0 bg-black/60 text-white text-sm font-medium px-3 py-1 z-10">
-                  Project 2
+                <div className="absolute top-0 left-0 bg-black/60 text-white text-sm font-body px-3 py-1 z-20">
+                  Fronx
                 </div>
                 <video
                   className="w-full h-full object-cover"
-                  src={`/videos/v1.mp4`} // Rotating sample videos
+                  src={`/videos/other_work/08.mp4`} // Rotating sample videos
                   autoPlay
                   loop
                   muted
                   playsInline
                 />
               </div>
-              <div className="relative rounded-xl overflow-hidden md:col-span-1 md:row-span-2">
-                <div className="absolute top-0 left-0 bg-black/60 text-white text-sm font-medium px-3 py-1 z-10">
-                  Project 3
+              <div className="relative rounded-xl overflow-hidden md:col-span-1 md:row-span-3">
+                <div className="absolute top-0 left-0 bg-black/60 text-white text-sm font-body px-3 py-1 z-20">
+                  Oaken Glow
                 </div>
                 <video
                   className="w-full h-full object-cover"
-                  src={`/videos/v1.mp4`} // Rotating sample videos
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-3 gap-6 mt-20">
-              <div className="relative rounded-xl overflow-hidden md:col-span-1 md:row-span-1">
-                <div className="absolute top-0 left-0 bg-black/60 text-white text-sm font-medium px-3 py-1 z-10">
-                  Project 1
-                </div>
-                <video
-                  className="w-full h-full object-cover"
-                  src={`/videos/v1.mp4`} // Rotating sample videos
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
-              </div>
-              <div className="relative rounded-xl overflow-hidden md:col-span-2 md:row-span-3">
-                <div className="absolute top-0 left-0 bg-black/60 text-white text-sm font-medium px-3 py-1 z-10">
-                  Project 2
-                </div>
-                <video
-                  className="w-full h-full object-cover"
-                  src={`/videos/v1.mp4`} // Rotating sample videos
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
-              </div>
-              <div className="relative rounded-xl overflow-hidden md:col-span-1 md:row-span-1">
-                <div className="absolute top-0 left-0 bg-black/60 text-white text-sm font-medium px-3 py-1 z-10">
-                  Project 3
-                </div>
-                <video
-                  className="w-full h-full object-cover"
-                  src={`/videos/v1.mp4`} // Rotating sample videos
+                  src={`/videos/other_work/09.mp4`} // Rotating sample videos
                   autoPlay
                   loop
                   muted
@@ -597,8 +612,12 @@ const MainLanding = () => {
                 />
               </div>
             </div>
-            <div className="w-full text-right text-xs text-white mt-5 md:mt-0">
-              SHOW ALL
+            <div className="grid grid-cols-1 md:grid-rows-3 gap-6 mt-5">
+              <div className="relative rounded-xl overflow-hidden md:col-span-1 md:row-span-3 text-right">
+                <div className="absolute top-0 text-white text-xs px-1 py-1 z-20 text-right right-0 underline-offset-2 underline">
+                  SHOW ALL
+                </div>
+              </div>
             </div>
           </section>
           {/* <div className="grid grid-cols-2 divide-x divide-gray-400 mt-5">
@@ -627,5 +646,12 @@ const MainLanding = () => {
     </main>
   );
 };
+
+export const Head = () => (
+  <>
+    <title>Epitome</title>;
+    <link rel="icon" href="/favicon.ico" />
+  </>
+);
 
 export default MainLanding;

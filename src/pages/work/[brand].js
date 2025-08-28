@@ -1,12 +1,20 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import ReactPlayer from "react-player";
 
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import data from "../../data/brand-data.json";
+import Footer from "../../components/footer";
+import WhiteFooter from "../../components/white_footer";
+import NavMenu from "../../components/menu";
+
 gsap.registerPlugin(ScrollTrigger);
 
 function Work({ params }) {
-  const { brand } = params;
+  const brand = params?.brand; // guard params
+  const currentBrand = brand && data.find((e) => e.brand_name === brand);
+
   const [menuOpen, setMenuOpen] = useState(false);
   const bgVidRef = useRef();
 
@@ -28,6 +36,7 @@ function Work({ params }) {
       gsap.to(".menu-item", { opacity: 0, y: -50, duration: 0.2 });
     }
   }, [menuOpen]);
+
   useEffect(() => {
     const cursor = document.getElementById("custom-cursor");
     if (!cursor) return;
@@ -39,13 +48,17 @@ function Work({ params }) {
     window.addEventListener("mousemove", move);
     return () => window.removeEventListener("mousemove", move);
   }, []);
+  if (!brand || !currentBrand) {
+    // During static build params may be undefined — return a harmless placeholder
+    return <div>Loading…</div>; // or null / a skeleton
+  }
   return (
     <main className="relative overflow-x-hidden cursor-none">
       <div
         id="custom-cursor"
         className="z-50 pointer-events-none fixed top-0 left-0 w-4 h-4 bg-gray-500 rounded-full border-2 border-gray-300/50 transform -translate-x-1/2 -translate-y-1/2 transition-transform duration-100 ease-out"
       />
-      <header className="fixed inset-x-0 top-0 z-40 h-20 overflow-hidden transition-colors duration-300">
+      <header className="fixed inset-x-0 top-0 z-40 h-20 overflow-hidden transition-colors duration-300 bg-gradient-to-r from-black via-transparent to-black">
         {/* Background video inside header (fills the 80px / h-20 height) */}
         <video
           className="absolute inset-0 w-full h-full object-cover opacity-0"
@@ -63,13 +76,13 @@ function Work({ params }) {
         {/* Header content (logo text + burger) */}
         <div className="relative flex z-10 items-center justify-between h-full px-8">
           {/* Left: text logo */}
-          <img
-            src="/images/logo_combination.png"
-            alt="Logo Text"
-            className="h-10 sm:h-14 hover:opacity-70 transition-opacity duration-500 ease-in-out"
-          />
-          {/* <a href="/">
-          </a> */}
+          <a href="/">
+            <img
+              src="/images/logo_combination.png"
+              alt="Logo Text"
+              className="h-10 sm:h-14 hover:opacity-70 transition-opacity duration-500 ease-in-out"
+            />
+          </a>
 
           {/* Right: burger icon */}
           <button
@@ -78,7 +91,7 @@ function Work({ params }) {
           >
             {/* Hamburger */}
             <Bars3Icon
-              className={`absolute inset-0 w-full h-full text-white transition-opacity duration-500 ease-in-out ${
+              className={`absolute inset-0 w-full h-full text-primary transition-opacity duration-500 ease-in-out ${
                 menuOpen
                   ? "opacity-0 scale-75 rotate-45"
                   : "opacity-100 scale-100 rotate-0"
@@ -87,7 +100,7 @@ function Work({ params }) {
 
             {/* Close */}
             <XMarkIcon
-              className={`absolute inset-0 w-full h-full text-white transition-opacity duration-500 ease-in-out ${
+              className={`absolute inset-0 w-full h-full text-primary transition-opacity duration-500 ease-in-out ${
                 menuOpen
                   ? "opacity-100 scale-100 rotate-0"
                   : "opacity-0 scale-75 rotate-45"
@@ -96,68 +109,219 @@ function Work({ params }) {
           </button>
         </div>
       </header>
-      {menuOpen && (
-        <div className="fixed inset-0 z-30 bg-black/90 flex items-center justify-start">
-          <ul className="menu-items text-white text-5xl md:text-7xl sm:text-5xl font-['Helvetica'] font-normal pl-8 space-y-8">
-            {[
-              { name: "HOME", link: "/" },
-              { name: "RECENT", link: "/recent" },
-              { name: "WORK", link: "/allworks" },
-              { name: "ABOUT", link: "/about" },
-            ].map((item, i) => (
-              <li key={item.name} className="menu-item opacity-0">
-                <a
-                  className="transition-all duration-500 transform hover:opacity-30 md:hover:text-8xl"
-                  href={item.link}
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {item.name}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-      <video
-        className="fixed inset-0 w-full h-full object-cover z-0 pointer-events-auto"
-        src="/videos/bg-vid.mp4"
-        autoPlay
-        muted
-        loop
-        playsInline
-        controls
-      />
-      {/* <div className="fixed inset-10 z-10 flex justify-start items-end text-white">
-        <div className="grid md:grid-rows-3 font-heading gap-5 w-full ">
+      <NavMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
 
-          <div className="uppercase font-heading font-semibold text-3xl md:text-5xl leading-tight text-left bg-clip-text text-transparent bg-gradient-to-tr from-slate-400 to-white">
-            <h1>Something Slick</h1>
-          </div>
-          <div className="text-xl md:text-2xl">
-            <h1>Subtitle</h1>
-          </div>
-          <div>
-            <h1>Pagination / somethi / somethin</h1>
-          </div>
+      <div className="fixed inset-0 object-cover z-0 pointer-events-auto overflow-hidden">
+        <ReactPlayer
+          src={currentBrand.main_video_url}
+          autoPlay
+          // muted
+          loop
+          config={{
+            vimeo: {},
+          }}
+          // className="absolute w-screen h-screen object-cover"
+          style={{
+            width: "100vw",
+            height: "100vh",
+            objectFit: "cover",
+            // aspectRatio: "16/9",
+          }}
+          className="react-player"
+          // playsInline
+          // poster="https://framerusercontent.com/images/VUV2f8sCgxYb8DuOlREjil5Uuc0.jpg"
+          controls
+        />
+        {/* <iframe
+          style={{
+            top: 0,
+            height: "100%",
+            width: "100%",
+            position: "absolute",
+          }}
+          title="vimeo-player"
+          src="https://player.vimeo.com/video/658915066?h=da7128b2c8"
+          className="object-none w-screen h-screen"
+          // width="640"
+          // height="360"
+          allow="fullscreen"
+          frameborder="0"
+          allowfullscreen
+        ></iframe> */}
+
+        {/* <div>
+          <iframe
+            src={`https://player.vimeo.com/video/720110367?title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479`}
+            frameborder="0"
+            allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+            style={{
+              position: "absolute",
+              top: "0",
+              left: "0",
+              width: "100%",
+              height: "100%",
+            }}
+            title="REDMI 10A FILM03 30 200522 WITHOUT SUBTITLE.MP4"
+          ></iframe>
         </div>
-      </div> */}
-      <div className="h-[90vh] z-10 relative text-white px-8 py-8">
+        <script src="https://player.vimeo.com/api/player.js"></script> */}
+      </div>
+
+      <div className="h-[90vh] z-10 relative text-primary px-8 py-8">
         <div className="flex flex-col justify-end font-heading gap-5 w-full h-full">
-          <div className="uppercase font-semibold text-3xl md:text-5xl leading-tight text-left bg-clip-text text-transparent bg-gradient-to-tr from-slate-400 to-white">
-            Something Slick
+          <div className="uppercase font-semibold text-5xl md:text-8xl leading-tight text-left bg-clip-text text-transparent bg-gradient-to-tl from-secondary via-hanBlue to-coralRed">
+            {currentBrand.brand_name}
           </div>
-          <div className="text-xl md:text-2xl font-semibold">Subtitle</div>
-          <div className="font-semibold">Pagination / somethi / somethin</div>
+          <div className="text-2xl md:text-4xl font-semibold text-primary">
+            {currentBrand.subtitle}
+          </div>
+          <div className="font-semibold text-primary">
+            {currentBrand.pagination_text}
+          </div>
         </div>
       </div>
       <div className="h-[10vh] -z-10 relative"></div>
 
-      <div className="relative grid md:grid-cols-2 bg-white z-10">
-        <div>some</div>
-        <div>some</div>
+      <div className="relative grid md:grid-cols-2 bg-primary z-10 px-8 py-16 gap-10">
+        <div>
+          <div className="font-heading text-3xl uppercase font-semibold bg-clip-text leading-tight text-transparent bg-gradient-to-tr  from-hanBlue to-coralRed">
+            About Project
+          </div>
+          <div className="py-4 md:w-3/4 text-sm">{currentBrand.about}</div>
+        </div>
+        <div>
+          <div className="font-heading text-3xl uppercase font-semibold bg-clip-text leading-tight text-transparent bg-gradient-to-tr  from-hanBlue to-coralRed">
+            Credits
+          </div>
+          <div className="py-4">
+            {currentBrand.credits.map((el, i) => (
+              <div>
+                <div className="pb-2 text-sm">
+                  <b>{el.title} </b>: {el.description}
+                </div>
+              </div>
+              // <div className="grid grid-cols-2">
+              // </div>
+            ))}
+          </div>
+          {/* <div className="py-4 md:w-3/4 text-sm">{currentBrand.about}</div> */}
+        </div>
+      </div>
+
+      <div className="bg-primary relative grid md:grid-cols-2 gap-10">
+        <div className="md:col-span-2 object-cover">
+          {[currentBrand.grids_media[0]].map((b, ind) =>
+            b.type == "image" ? (
+              <img
+                src={`/images/${b.url}`}
+                className="inset-0 w-full h-full object-cover"
+              />
+            ) : (
+              <video
+                src={`/videos/${b.url}`}
+                className="inset-0 w-full h-full object-cover"
+                autoPlay
+                muted
+                loop
+                playsInline
+              />
+            )
+          )}
+        </div>
+      </div>
+      <div className="bg-primary relative grid md:grid-cols-2 gap-10 p-10">
+        {[currentBrand.grids_media[1], currentBrand.grids_media[2]].map(
+          (b, ind) =>
+            b.type == "image" ? (
+              <div>
+                <img src={`/images/${b.url}`} />
+              </div>
+            ) : (
+              <div>
+                <video
+                  src={`/videos/${b.url}`}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                />
+              </div>
+            )
+        )}
+      </div>
+      <div className="bg-primary relative grid md:grid-cols-2 gap-10">
+        <div className="md:col-span-2">
+          {[currentBrand.grids_media[3]].map((b, ind) =>
+            b.type == "image" ? (
+              <img
+                src={`/images/${b.url}`}
+                className="inset-0 w-full h-full object-cover"
+              />
+            ) : (
+              <video
+                src={`/videos/${b.url}`}
+                className="inset-0 w-full h-full object-cover"
+                autoPlay
+                muted
+                loop
+                playsInline
+              />
+            )
+          )}
+        </div>
+      </div>
+      <div className="bg-primary relative grid md:grid-cols-2 gap-10 p-10">
+        {[currentBrand.grids_media[4], currentBrand.grids_media[5]].map(
+          (b, ind) =>
+            b.type == "image" ? (
+              <div>
+                <img src={`/images/${b.url}`} />
+              </div>
+            ) : (
+              <div>
+                <video
+                  src={`/videos/${b.url}`}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                />
+              </div>
+            )
+        )}
+      </div>
+      <div className="bg-primary relative grid md:grid-cols-2 gap-10">
+        <div className="md:col-span-2">
+          {[currentBrand.grids_media[6]].map((b, ind) =>
+            b.type == "image" ? (
+              <img
+                src={`/images/${b.url}`}
+                className="inset-0 w-full h-full object-cover"
+              />
+            ) : (
+              <video
+                src={`/videos/${b.url}`}
+                className="inset-0 w-full h-full object-cover"
+                autoPlay
+                muted
+                loop
+                playsInline
+              />
+            )
+          )}
+        </div>
+      </div>
+      <div className="relative">
+        <WhiteFooter />
       </div>
     </main>
   );
 }
+
+export const Head = () => (
+  <>
+    <title>Epitome</title>;
+  </>
+);
 
 export default Work;
