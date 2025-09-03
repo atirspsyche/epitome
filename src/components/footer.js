@@ -6,57 +6,57 @@ export default function Footer() {
       <div className="grid grid-cols-2 w-full gap-y-8">
         {/* Row 1–4: Left and Right aligned links */}
         <a
-          href="https://wa.me/7400368811"
+          href="https://wa.me/9892211814"
           className="w-auto text-3xl md:text-7xl font-heading col-start-1 text-left hover:opacity-30 transition-all duration-500 hover:text-[5rem] "
           target="_blank"
           rel="noopener noreferrer"
         >
-          7400368811
+          9892211814
         </a>
         <a
           href="#about"
           className=" text-xs self-end font-semibold col-start-2 text-right hover:opacity-80 transition-all duration-300"
         >
-          @yourhandle
+          .
         </a>
 
         <a
-          href="mailto:hello@yourdomain.com"
+          href="mailto:Info@theepitomeproduction.com"
           className="text-3xl md:text-7xl font-heading col-start-1 text-left hover:opacity-30 transition-all duration-500 hover:text-[5rem]"
         >
-          TEMP@GMAIL.COM
+          Email Us
         </a>
         <a
           href="#work"
           className="text-xs self-end font-semibold col-start-2 text-right hover:opacity-80 transition-all duration-300"
         >
-          fb.com/yourpage
+          .
         </a>
 
         <a
-          href="#contact"
+          href="https://www.instagram.com/epitome_p?igsh=MXgxZGVqZ21xYTZmYg=="
           className="text-3xl md:text-7xl font-heading col-start-1 text-left hover:opacity-30 transition-all duration-500 hover:text-[5rem]"
         >
-          TWITTER
+          Instagram
         </a>
         <a
           href="#contact"
           className="text-xs self-end font-semibold col-start-2 text-right hover:opacity-80 transition-all duration-300"
         >
-          @yourtwitter
+          .
         </a>
 
         <a
-          href="#blog"
+          href="https://vimeo.com/user44587770"
           className="text-3xl md:text-7xl font-heading col-start-1 text-left hover:opacity-30 transition-all duration-500 hover:text-[5rem]"
         >
-          EMAIL
+          Vimeo
         </a>
         <a
           href="#blog"
           className="text-xs self-end font-semibold col-start-2 text-right hover:opacity-80 transition-all duration-300"
         >
-          hello@example.com
+          .
         </a>
 
         {/* Divider Line */}

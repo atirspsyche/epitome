@@ -135,7 +135,7 @@ function AllWork() {
             <li className="brand-list">
               <Link
                 className="opacity-30 transition-all duration-500 transform  md:hover:opacity-100 md:hover:text-6xl "
-                to={`/work/${el}`}
+                to={`/work/stills/${el}`}
               >
                 {el}
               </Link>

@@ -4,16 +4,21 @@ import ReactPlayer from "react-player";
 
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import data from "../../data/brand-data.json";
-import Footer from "../../components/footer";
-import WhiteFooter from "../../components/white_footer";
-import NavMenu from "../../components/menu";
+import data from "../../../data/motion-data.json";
+import Footer from "../../../components/footer";
+import WhiteFooter from "../../../components/white_footer";
+import NavMenu from "../../../components/menu";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function Work({ params }) {
-  const brand = params?.brand; // guard params
-  const currentBrand = brand && data.find((e) => e.brand_name === brand);
+function Motion({ params }) {
+  const brand = params?.brand;
+  console.log(brand);
+  const currentBrand =
+    brand &&
+    data.find((e) => String(e.brand_name).replace(/\s+/g, "") == brand);
+
+  console.log(currentBrand);
 
   const [menuOpen, setMenuOpen] = useState(false);
   const bgVidRef = useRef();
@@ -58,7 +63,7 @@ function Work({ params }) {
         id="custom-cursor"
         className="z-50 pointer-events-none fixed top-0 left-0 w-4 h-4 bg-gray-500 rounded-full border-2 border-gray-300/50 transform -translate-x-1/2 -translate-y-1/2 transition-transform duration-100 ease-out"
       />
-      <header className="fixed inset-x-0 top-0 z-40 h-20 overflow-hidden transition-colors duration-300 bg-gradient-to-r from-black via-transparent to-black">
+      <header className="fixed inset-x-0 top-0 z-40 h-20 overflow-hidden transition-colors duration-300 bg-gradient-to-r from-secondary via-transparent to-secondary">
         {/* Background video inside header (fills the 80px / h-20 height) */}
         <video
           className="absolute inset-0 w-full h-full object-cover opacity-0"
@@ -169,7 +174,7 @@ function Work({ params }) {
 
       <div className="h-[90vh] z-10 relative text-primary px-8 py-8">
         <div className="flex flex-col justify-end font-heading gap-5 w-full h-full">
-          <div className="uppercase font-semibold text-5xl md:text-8xl leading-tight text-left bg-clip-text text-transparent bg-gradient-to-tl from-secondary via-hanBlue to-coralRed">
+          <div className="uppercase font-heading text-5xl md:text-8xl leading-tight text-left text-primary">
             {currentBrand.brand_name}
           </div>
           <div className="text-2xl md:text-4xl font-semibold text-primary">
@@ -184,19 +189,21 @@ function Work({ params }) {
 
       <div className="relative grid md:grid-cols-2 bg-primary z-10 px-8 py-16 gap-10">
         <div>
-          <div className="font-heading text-3xl uppercase font-semibold bg-clip-text leading-tight text-transparent bg-gradient-to-tr  from-hanBlue to-coralRed">
+          <div className="font-heading text-3xl uppercase bg-clip-text leading-tight text-hanBlue">
             About Project
           </div>
-          <div className="py-4 md:w-3/4 text-sm">{currentBrand.about}</div>
+          <div className="py-4 md:w-3/4 text-sm text-body text-secondary">
+            {currentBrand.about}
+          </div>
         </div>
         <div>
-          <div className="font-heading text-3xl uppercase font-semibold bg-clip-text leading-tight text-transparent bg-gradient-to-tr  from-hanBlue to-coralRed">
+          <div className="font-heading text-3xl uppercase font-semibold bg-clip-text leading-tight text-hanBlue">
             Credits
           </div>
           <div className="py-4">
             {currentBrand.credits.map((el, i) => (
               <div>
-                <div className="pb-2 text-sm">
+                <div className="pb-2 text-sm text-body text-secondary">
                   <b>{el.title} </b>: {el.description}
                 </div>
               </div>
@@ -312,7 +319,8 @@ function Work({ params }) {
         </div>
       </div>
       <div className="relative">
-        <WhiteFooter />
+        {/* <WhiteFooter /> */}
+        <Footer />
       </div>
     </main>
   );
@@ -324,4 +332,4 @@ export const Head = () => (
   </>
 );
 
-export default Work;
+export default Motion;

@@ -3,20 +3,11 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Link } from "gatsby";
+import brandList from "../../../data/still-brand-list.json";
 
 import NavMenu from "../../../components/menu";
 
 gsap.registerPlugin(ScrollTrigger);
-
-const brandList = [
-  "Artlist",
-  "Society Tea",
-  "Brand 3",
-  "Brand 4",
-  "Brand 5",
-  "Brand 6",
-  "Brand 7",
-];
 
 function AllWork() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -135,7 +126,7 @@ function AllWork() {
             <li className="brand-list">
               <Link
                 className="opacity-30 transition-all duration-500 transform  md:hover:opacity-100 md:hover:text-6xl "
-                to={`/work/${el}`}
+                to={`/work/stills/${el.replace(/\s+/g, "")}`}
               >
                 {el}
               </Link>

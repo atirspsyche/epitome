@@ -8,13 +8,7 @@ module.exports = {
     extend: {
       fontFamily: {
         // Primary heading font: Helvetica (or system sans-serif fallback)
-        heading: [
-          "Satoshi",
-          "Helvetica Neue",
-          "Helvetica",
-          "Arial",
-          "sans-serif",
-        ],
+        heading: ["Satoshi"],
         // Secondary/body font: same stack (so everything uses Helvetica)
         body: ["Inter", "Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
         sans: ["Inter"],

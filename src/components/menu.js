@@ -6,14 +6,14 @@ export default function NavMenu({ menuOpen, setMenuOpen }) {
 
   const MENU = [
     { name: "HOME", link: "/" },
-    { name: "RECENT", link: "/recent" },
+    { name: "RECENT", link: "/" },
     {
       name: "WORK",
       link: "/allworks",
       submenu: [
         { name: "Motion", link: "/allworks/motion" },
         { name: "Short Films", link: "/allworks/films" },
-        { name: "Digital", link: "/allworks/digital" },
+        { name: "Digital", link: "/allworks/motion" },
         { name: "Stills", link: "/allworks/stills" },
       ],
     },
@@ -64,7 +64,7 @@ export default function NavMenu({ menuOpen, setMenuOpen }) {
     <>
       {menuOpen && (
         <div className="fixed inset-0 z-30 bg-black/90 flex items-center justify-start">
-          <ul className="menu-items text-white text-5xl md:text-7xl sm:text-5xl font-['Helvetica'] font-normal pl-8 space-y-8 w-full max-w-[720px]">
+          <ul className="menu-items text-white text-5xl md:text-7xl sm:text-5xl font-heading pl-8 space-y-8 w-full max-w-[720px]">
             {MENU.map((item) => {
               const hasSub = Array.isArray(item.submenu);
               const isOpen = openSubmenu === item.name;
@@ -76,7 +76,7 @@ export default function NavMenu({ menuOpen, setMenuOpen }) {
                     <a
                       href={item.link}
                       onClick={() => setMenuOpen(false)}
-                      className="transition-all duration-300 transform hover:opacity-30 md:hover:text-8xl"
+                      className="transition-all duration-300 transform hover:opacity-30 md:hover:text-8xl "
                     >
                       {item.name}
                     </a>

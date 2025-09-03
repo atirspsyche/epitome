@@ -5,17 +5,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Link } from "gatsby";
 import NavMenu from "../../../components/menu";
 
-gsap.registerPlugin(ScrollTrigger);
+import brandList from "../../../data/motion-brand-list.json";
 
-const brandList = [
-  "Artlist",
-  "Society Tea",
-  "Brand 3",
-  "Brand 4",
-  "Brand 5",
-  "Brand 6",
-  "Brand 7",
-];
+gsap.registerPlugin(ScrollTrigger);
 
 function AllWork() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -134,7 +126,7 @@ function AllWork() {
             <li className="brand-list">
               <Link
                 className="opacity-30 transition-all duration-500 transform  md:hover:opacity-100 md:hover:text-6xl "
-                to={`/work/${el}`}
+                to={`/work/motion/${el.replace(/\s+/g, "")}`}
               >
                 {el}
               </Link>

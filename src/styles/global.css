@@ -2,15 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/* @font-face {
+  font-family: "Inter";
+  src: url("/fonts/inter/Inter-Medium.otf");
+  font-style:  normal;
+  font-display: swap;
+} */
 @font-face {
   font-family: "Inter";
-  src: url('/static/fonts/inter/Inter-Medium.otf');
+  src: url("/fonts/inter/Inter-Regular.otf");
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Satoshi";
-  src: url('/static/fonts/satoshi/Satoshi-Bold.otf');
+  src: url("/fonts/satoshi/Satoshi-Bold.otf");
   font-style: normal;
   font-display: swap;
 }

@@ -1,15 +1,12 @@
+// src/pages/MainLanding.jsx
 import React, { useRef, useEffect, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Footer from "../components/footer";
+import NavMenu from "../components/menu";
 
 // Heroicon for the burger:
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-
-// Your static assets under /static/images (served at /images/…):
-import logoIcon from "../images/epitome-logo-icon.png";
-import NavMenu from "../components/menu";
-import SideGradients from "../components/grad-sides";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -19,27 +16,11 @@ const MainLanding = () => {
   const galleryRef = useRef(null);
   const galleryInnerRef = useRef(null);
   const featuredRef = useRef(null);
-  const videosInnerRef = useRef(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
   const splashRef = useRef(null);
 
   useEffect(() => {
-    // gsap.to(bgVidRef.current, {
-    //   opacity: 1,
-    //   ease: "none",
-    //   scrollTrigger: {
-    //     trigger: overlayRef.current,
-    //     start: "bottom top", // when overlay’s bottom reaches viewport top
-    //     end: "bottom top", // same point, so it only fires once
-    //     toggleActions: "play reverse play reverse",
-    //   },
-    // });
-
-    // ——————————————
-    // (A) “Curtain-Up” Animation for the White Overlay (with Logo inside)
-    // ——————————————
-
     gsap.to(overlayRef.current, {
       yPercent: -100,
       ease: "power2.out",
@@ -48,24 +29,13 @@ const MainLanding = () => {
         start: "top top",
         end: "bottom top",
         scrub: true,
-
         onUpdate: (self) => {
-          // When the bottom of the overlay hits the top of the viewport,
-          // toggle the header's bg to black
-          // if (self.progress >= 1) {
-          //   console.log("hitting this");
-          //   bgVidRef.current.classList.remove("opacity-0");
-          // } else if (self.progress < 1) {
-          //   bgVidRef.current.classList.add("opacity-0");
-          // }
-          // fade in header video between 80% and 100% of this scroll
-          const raw = self.progress; // 0 → 1
-          const fadeStart = 0.95; // start fading at 80%
-          const fadeRange = 1 - fadeStart; // last 20% of scroll
+          const raw = self.progress;
+          const fadeStart = 0.95;
+          const fadeRange = 1 - fadeStart;
           let opacity = (raw - fadeStart) / fadeRange;
-          opacity = Math.min(Math.max(opacity, 0), 1); // clamp 0→1
-
-          bgVidRef.current.style.opacity = opacity;
+          opacity = Math.min(Math.max(opacity, 0), 1);
+          if (bgVidRef.current) bgVidRef.current.style.opacity = opacity;
         },
       },
     });
@@ -74,7 +44,6 @@ const MainLanding = () => {
     const innerEl = galleryInnerRef.current;
 
     if (galleryEl && innerEl) {
-      // Calculate how far the inner container must move to the left
       const totalScrollWidth =
         innerEl.scrollWidth - window.innerWidth + 0.2 * innerEl.scrollWidth;
 
@@ -84,7 +53,7 @@ const MainLanding = () => {
         scrollTrigger: {
           trigger: galleryEl,
           start: "top top",
-          end: () => `+=${innerEl.scrollWidth}`, // scroll distance = full width of inner
+          end: () => `+=${innerEl.scrollWidth}`,
           scrub: true,
           pin: true,
           pinSpacing: false,
@@ -92,13 +61,12 @@ const MainLanding = () => {
       });
     }
 
-    // Cleanup on unmount
     return () => {
       ScrollTrigger.getAll().forEach((st) => st.kill());
     };
   }, []);
+
   useEffect(() => {
-    // only run the mobile reveal on small screens
     if (window.innerWidth < 768) {
       gsap.utils.toArray(".mobile-video").forEach((el) => {
         gsap.from(el, {
@@ -115,6 +83,7 @@ const MainLanding = () => {
       });
     }
   }, []);
+
   useEffect(() => {
     const cursor = document.getElementById("custom-cursor");
     if (!cursor) return;
@@ -126,66 +95,83 @@ const MainLanding = () => {
     window.addEventListener("mousemove", move);
     return () => window.removeEventListener("mousemove", move);
   }, []);
+
+  // useEffect(() => {
+  //   const ctx = gsap.context(() => {
+  //     const tl = gsap.timeline({
+  //       scrollTrigger: {
+  //         trigger: featuredRef.current,
+  //         start: "top top",
+  //         end: "+=250%",
+  //         scrub: true,
+  //         pin: true,
+  //       },
+  //     });
+
+  //     tl.to(
+  //       featuredRef.current.querySelector("video:nth-child(2)"),
+  //       { xPercent: 97, duration: 1, ease: "none" },
+  //       0
+  //     );
+  //     tl.to(
+  //       featuredRef.current.querySelector("video:nth-child(3)"),
+  //       { xPercent: 94, duration: 1, ease: "none" },
+  //       1
+  //     );
+  //     tl.to(
+  //       featuredRef.current.querySelector("video:nth-child(4)"),
+  //       { xPercent: 91, duration: 1, ease: "none" },
+  //       2
+  //     );
+  //     tl.to(
+  //       featuredRef.current.querySelector("video:nth-child(5)"),
+  //       { xPercent: 88, duration: 1, ease: "none" },
+  //       3
+  //     );
+  //   });
+
+  //   return () => ctx.revert();
+  // }, []);
+
+  // inside the useEffect that currently builds the featured timeline:
   useEffect(() => {
+    // nothing to do if the ref isn't mounted
+    if (!featuredRef.current) return;
+
+    // use gsap.context for automatic scoping / cleanup
     const ctx = gsap.context(() => {
-      // 4× viewport pin so we have room for A→B, B→C, C→D, then release:
+      const el = featuredRef.current;
+      if (!el) return; // extra-safety
+
+      // collect cards from the mounted element
+      const cards = Array.from(el.querySelectorAll(".feat-card"));
+      if (!cards.length) return; // nothing to animate
+
       const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: featuredRef.current,
+          trigger: el,
           start: "top top",
-          end: "+=250%", // 2× viewport height
+          end: "+=250%",
           scrub: true,
           pin: true,
         },
       });
 
-      // Step 1 (0% → 100% scroll): bring in B over A
-      tl.to(
-        featuredRef.current.querySelector("video:nth-child(2)"), // B
-        {
-          xPercent: 95, // from -100% → 0% (covering A)
-          duration: 1,
-          ease: "none",
-        },
-        0 // at timeline position 0
-      );
+      const xValues = [98, 96, 94, 92];
+      cards.slice(1, 1 + xValues.length).forEach((card, i) => {
+        tl.to(card, { xPercent: xValues[i], duration: 1, ease: "none" }, i);
+      });
 
-      // Step 2 (100% → 200%): bring in C over B
-      tl.to(
-        featuredRef.current.querySelector("video:nth-child(3)"), // C
-        {
-          xPercent: 90, // from -100% → 0%
-          duration: 1,
-          ease: "none",
-        },
-        1 // at timeline position 1 (i.e. after B finished)
-      );
+      // (optional) If you want the first card to have an entrance/opacity tweak:
+      // tl.fromTo(cards[0], { opacity: 0.98 }, { opacity: 1, duration: 1 }, 0);
+    }, featuredRef); // scope the context to the ref
 
-      // Step 3 (200% → 300%): bring in D over C
-      tl.to(
-        featuredRef.current.querySelector("video:nth-child(4)"), // D
-        {
-          xPercent: 85,
-          duration: 1,
-          ease: "none",
-        },
-        2 // at timeline position 2
-      );
-      tl.to(
-        featuredRef.current.querySelector("video:nth-child(5)"), // D
-        {
-          xPercent: 80,
-          duration: 1,
-          ease: "none",
-        },
-        3 // at timeline position 2
-      );
-
-      // You could add a 4th tween if you want a little pause from 300% → 400%.
-    });
-
-    return () => ctx.revert();
-  }, []);
+    return () => {
+      // cleanup
+      ctx.revert();
+      ScrollTrigger.getAll().forEach((st) => st.kill());
+    };
+  }, []); // runs after mount
 
   useEffect(() => {
     if (menuOpen) {
@@ -195,24 +181,21 @@ const MainLanding = () => {
         {
           y: 0,
           opacity: 1,
-          ease: "back.out(1.7)", // softer rebound
-          duration: 0.5, // quicker settle
-          stagger: 0.15, // tighter sequence
+          ease: "back.out(1.7)",
+          duration: 0.5,
+          stagger: 0.15,
         }
       );
     } else {
-      // On close, reset for next open
       gsap.to(".menu-item", { opacity: 0, y: -50, duration: 0.2 });
     }
   }, [menuOpen]);
+
   useEffect(() => {
-    // 1) Header scrollTrigger …
-    // 2) Curtain scrollTrigger …
-    // 3) Gallery scrollTrigger …
     window.scrollTo(0, 0);
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
-    // 4) Splash animation
+
     if (showSplash && splashRef.current) {
       document.body.style.overflow = "hidden";
       gsap.to(splashRef.current, {
@@ -227,18 +210,34 @@ const MainLanding = () => {
       });
     }
   }, [showSplash]);
+
   return (
-    <main className="relative overflow-x-hidden">
+    <div className="relative overflow-x-hidden">
+      {/* ======= STATIC THIN BARS (on top of everything) =======
+          - 5px width each (w-[5px])
+          - vertical gradient top→bottom
+          - pointer-events-none so clicks pass through
+          - z-50 to sit above header/content
+      */}
+      <div
+        aria-hidden
+        // className="fixed inset-y-0 left-0 w-[5px] z-50 pointer-events-none hidden sm:block"
+      />
+      <div
+        aria-hidden
+        // className="fixed inset-y-0 right-0 w-[5px] z-50 pointer-events-none hidden sm:block"
+      />
+
       <div
         id="custom-cursor"
         className="z-50 pointer-events-none fixed top-0 left-0 w-4 h-4 bg-gray-500 rounded-full border-2 border-gray-300/50 transform -translate-x-1/2 -translate-y-1/2 transition-transform duration-100 ease-out"
       />
+
       {showSplash && (
         <div
           ref={splashRef}
           className="fixed inset-0 z-50 bg-white flex items-center justify-center"
         >
-          {/* <img src="/images/logomark.svg" alt="Splash Logo" className="w-80" /> */}
           <video
             src="/videos/epi.mp4"
             className="w-1/3"
@@ -260,14 +259,13 @@ const MainLanding = () => {
           muted
           loop
           playsInline
+          preload="none"
         />
 
-        {/* Overlay on top of video for slight darkening (optional) */}
-        {/* <div className="absolute inset-0 bg-black/30" /> */}
-
-        {/* Header content (logo text + burger) */}
-        <div className="relative z-10 flex items-center justify-between h-full px-8">
-          {/* Left: text logo */}
+        <div
+          className="relative z-10 flex items-center justify-between h-full px-8"
+          style={{ marginLeft: 0, marginRight: 0 }}
+        >
           <a href="/">
             <img
               src="/images/logo_combination.png"
@@ -276,12 +274,10 @@ const MainLanding = () => {
             />
           </a>
 
-          {/* Right: burger icon */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className="relative w-10 h-10 focus:outline-none"
           >
-            {/* Hamburger */}
             <Bars3Icon
               className={`absolute inset-0 w-full h-full text-primary transition-opacity duration-500 ease-in-out ${
                 menuOpen
@@ -290,7 +286,6 @@ const MainLanding = () => {
               }`}
             />
 
-            {/* Close */}
             <XMarkIcon
               className={`absolute inset-0 w-full h-full text-primary transition-opacity duration-500 ease-in-out ${
                 menuOpen
@@ -313,15 +308,10 @@ const MainLanding = () => {
 
       <NavMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
 
-      {/* ——————————————————————————————
-          (3) WHITE OVERLAY “CURTAIN” (z-10)
-            Contains the centered logo which scrolls off with the curtain
-      —————————————————————————————— */}
       <div
         ref={overlayRef}
         className="fixed inset-10 z-10 flex justify-center items-center"
       >
-        {/* Centered logo */}
         <img
           src="/images/logomark_w.svg"
           alt="Main Logo"
@@ -332,324 +322,629 @@ const MainLanding = () => {
       <div className="h-screen z-0 relative" />
 
       <div className="pt-20">
+        {/* ---------- FEATURED (with overlays, hover, click) ---------- */}
         <section id="featured-wrapper" className="w-screen bg-secondary">
           <div className="w-full pt-12 px-8">
-            <h2
-              className="
-
-                        font-heading font-semibold
-                        text-[2rem] sm:text-[2rem] lg:text-[5rem]
-                        leading-tight
-                        text-left
-                        bg-clip-text text-transparent
-                        bg-gradient-to-r from-hanBlue to-coralRed
-                        uppercase
-                        "
-            >
-              Neque porro quisquam est qui dolorem
+            <h2 className="font-heading font-semibold text-[2rem] sm:text-[2rem] lg:text-[5rem] leading-tight text-primary text-left uppercase">
+              Epitome is a results-driven creative production company
             </h2>
           </div>
-          <div className="w-full text-right text-xs text-white pb-12 px-8 mt-5 font-body md:mt-0 underline underline-offset-2">
-            LEARN MORE
+
+          {/* <div className="w-full text-right text-xs text-white pb-12 px-8 mt-5 font-body md:mt-0 underline underline-offset-2">
+            <a href="">LEARN MORE</a>
+          </div> */}
+          <div className="grid grid-cols-1 md:grid-rows-3 gap-6 mt-5 pr-5">
+            <div className="relative rounded-xl overflow-hidden md:col-span-1 md:row-span-3 text-right">
+              <div className="absolute inset-0 flex items-end justify-end p-4">
+                <a
+                  href="/about"
+                  className="inline-block bg-white/10 hover:bg-white/20 text-white text-xs px-3 py-2 rounded backdrop-blur-sm transition-colors duration-200"
+                >
+                  Learn More
+                </a>
+              </div>
+            </div>
           </div>
 
           <div className="relative py-1">
             <div className="absolute inset-x-0 top-1/2 h-0.5 bg-gradient-to-r from-transparent via-hanBlue to-transparent" />
           </div>
+
+          {/* MOBILE LIST (keeps same behaviour) */}
           <div className="block md:hidden px-4 py-12">
-            <h2 className="text-5xl font-heading font-semibold text-center mb-8 bg-gradient-to-r from-coralRed to-hanBlue bg-clip-text text-transparent">
+            <h2 className="text-5xl font-heading font-semibold text-center mb-8 text-primary">
               FEATURED
             </h2>
             <div className="space-y-8">
               {[
-                "/videos/featured/akshat.mp4",
-                "/videos/featured/oaken.mp4",
-                "/videos/featured/dzire.mp4",
-                "/videos/featured/ballentines.mp4",
-                "/videos/featured/kingfisher.mp4",
-              ].map((src, i) => (
-                <div
+                {
+                  src: "/videos/featured/akshat.mp4",
+                  title: "BPFT 2025",
+                  subtitle: "Brand Film",
+                  href: "/work/BPFT2025",
+                },
+                {
+                  src: "/videos/featured/oaken.mp4",
+                  title: "Oaken",
+                  subtitle: "Product",
+                  href: "/work/oaken",
+                },
+                {
+                  src: "/videos/featured/dzire.mp4",
+                  title: "Dzire",
+                  subtitle: "Commercial",
+                  href: "/work/dzire",
+                },
+                {
+                  src: "/videos/featured/ballentines.mp4",
+                  title: "Ballentines",
+                  subtitle: "TVC",
+                  href: "/work/ballentines",
+                },
+                {
+                  src: "/videos/featured/kingfisher.mp4",
+                  title: "Kingfisher",
+                  subtitle: "Film",
+                  href: "/work/kingfisher",
+                },
+              ].map((item, i) => (
+                <a
                   key={i}
-                  className="mobile-video relative rounded-3xl overflow-hidden h-64"
+                  href={item.href}
+                  className="relative block rounded-3xl overflow-hidden h-64"
                 >
                   <video
-                    src={src}
+                    src={item.src}
                     className="w-full h-full object-cover"
                     autoPlay
                     loop
                     muted
                     playsInline
+                    preload="none"
                   />
-                  <div className="absolute bottom-4 left-4 bg-secondary/50 text-primary px-2 py-1 rounded">
-                    {src.split("/").at(-1).split(".").at(0)}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  <div className="absolute bottom-4 left-4 px-3 py-1 rounded-full bg-black/50 text-white text-sm">
+                    {item.title}
                   </div>
-                </div>
+                </a>
               ))}
             </div>
           </div>
+
+          {/* DESKTOP FEATURED (keeps GSAP pin/scroll) */}
           <div
             className="hidden md:grid grid-cols-1 md:grid-cols-7 h-screen"
             ref={featuredRef}
           >
-            {/* Col A: Videos (takes the left 50% on md+) */}
             <div className="relative overflow-hidden md:col-span-6 h-4/5 mt-40">
-              {/*… your existing absolute‐stacked video JS (videosInnerRef) goes here …*/}
-              <div className="absolute w-full inset-0 ">
-                {/* VIDEO A: starts onscreen */}
+              <div className="absolute w-full inset-0">
+                <a
+                  href="/work/akshat"
+                  className="feat-card group absolute inset-0 z-10 rounded-3xl block"
+                  style={{ transform: "translateX(0%)" }}
+                >
+                  <video
+                    src="/videos/featured/akshat.mp4"
+                    className="feat-video absolute inset-0 w-full h-full object-cover rounded-3xl"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    preload="none"
+                  />
+                  {/* gradient base so text remains readable */}
+                  <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-3xl" />
 
-                <video
-                  src="/videos/featured/akshat.mp4"
-                  className="absolute inset-0 w-full h-full object-cover z-10 rounded-3xl"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
+                  {/* top-left pill */}
+                  <div className="absolute top-4 left-4 z-30">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/50 backdrop-blur-sm text-white text-sm font-medium">
+                      BPFT 2025
+                    </div>
+                  </div>
 
-                {/* VIDEO B: start off to the left */}
-                <video
-                  src="/videos/featured/oaken.mp4"
-                  className="absolute inset-0 w-full h-full object-cover z-20 rounded-3xl"
+                  {/* hover center reveal */}
+                  <div className="absolute inset-0 z-20 flex items-center justify-center px-4">
+                    <div className="transform translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out text-center pointer-events-none">
+                      <h4 className="text-white text-4xl font-heading uppercase tracking-wide drop-shadow-[0_6px_20px_rgba(0,0,0,0.7)]">
+                        BPFT 2025
+                      </h4>
+                      <div className="mt-2 opacity-80 text-sm text-white">
+                        Premium Promo Films
+                      </div>
+                    </div>
+                  </div>
+                </a>
+
+                <a
+                  href="/work/motion/OakenGlow"
+                  className="feat-card group absolute inset-0 z-20 rounded-3xl block"
                   style={{ transform: "translateX(-100%)" }}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
+                >
+                  <video
+                    src="/videos/featured/oaken.mp4"
+                    className="feat-video absolute inset-0 w-full h-full object-cover rounded-3xl"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    preload="none"
+                  />
+                  <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-3xl" />
+                  <div className="absolute top-4 left-4 z-30">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/50 backdrop-blur-sm text-white text-sm font-medium">
+                      Oaken Glow
+                    </div>
+                  </div>
+                  <div className="absolute inset-0 z-20 flex items-center justify-center px-4">
+                    <div className="transform translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out text-center pointer-events-none">
+                      <h4 className="text-white text-4xl font-heading uppercase tracking-wide drop-shadow-[0_6px_20px_rgba(0,0,0,0.7)]">
+                        Oaken Glow
+                      </h4>
+                      <div className="mt-2 opacity-80 text-sm text-white">
+                        Product Film
+                      </div>
+                    </div>
+                  </div>
+                </a>
 
-                {/* VIDEO C: also off to the left */}
-                <video
-                  src="/videos/featured/dzire.mp4"
-                  className="absolute inset-0 w-full h-full object-cover z-30 rounded-3xl"
+                <a
+                  href="/work/motion/SuzukiDzire"
+                  className="feat-card group absolute inset-0 z-30 rounded-3xl block"
                   style={{ transform: "translateX(-100%)" }}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
+                >
+                  <video
+                    src="/videos/featured/dzire.mp4"
+                    className="feat-video absolute inset-0 w-full h-full object-cover rounded-3xl"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    preload="none"
+                  />
+                  <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-3xl" />
+                  <div className="absolute top-4 left-4 z-30">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/50 backdrop-blur-sm text-white text-sm font-medium">
+                      Suzuki Dzire
+                    </div>
+                  </div>
+                  <div className="absolute inset-0 z-20 flex items-center justify-center px-4">
+                    <div className="transform translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out text-center pointer-events-none">
+                      <h4 className="text-white text-4xl font-heading uppercase tracking-wide drop-shadow-[0_6px_20px_rgba(0,0,0,0.7)]">
+                        Suzuki Dzire
+                      </h4>
+                      <div className="mt-2 opacity-80 text-sm text-white">
+                        Virtual Production Commercial
+                      </div>
+                    </div>
+                  </div>
+                </a>
 
-                {/* VIDEO D: off to the left, on top of C in stacking order */}
-                <video
-                  src="/videos/featured/ballentines.mp4"
-                  className="absolute inset-0 w-full h-full object-cover z-40 rounded-3xl"
+                <a
+                  href="/work/motion/BallantineStayTrue"
+                  className="feat-card group absolute inset-0 z-40 rounded-3xl block"
                   style={{ transform: "translateX(-100%)" }}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
+                >
+                  <video
+                    src="/videos/featured/ballentines.mp4"
+                    className="feat-video absolute inset-0 w-full h-full object-cover rounded-3xl"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    preload="none"
+                  />
+                  <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-3xl" />
+                  <div className="absolute top-4 left-4 z-30">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/50 backdrop-blur-sm text-white text-sm font-medium">
+                      Ballantine Stay True
+                    </div>
+                  </div>
+                  <div className="absolute inset-0 z-20 flex items-center justify-center px-4">
+                    <div className="transform translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out text-center pointer-events-none">
+                      <h4 className="text-white text-4xl font-heading uppercase tracking-wide drop-shadow-[0_6px_20px_rgba(0,0,0,0.7)]">
+                        Ballantine Stay True
+                      </h4>
+                      <div className="mt-2 opacity-80 text-sm text-white">
+                        Film
+                      </div>
+                    </div>
+                  </div>
+                </a>
 
-                <video
-                  src="/videos/featured/kingfisher.mp4"
-                  className="absolute inset-0 w-full h-full object-cover z-50 rounded-3xl"
+                <a
+                  href="/work/motion/BallantineStayTrue"
+                  className="feat-card group absolute inset-0 z-50 rounded-3xl block"
                   style={{ transform: "translateX(-100%)" }}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
+                >
+                  <video
+                    src="/videos/featured/kingfisher.mp4"
+                    className="feat-video absolute inset-0 w-full h-full object-cover rounded-3xl"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    preload="none"
+                  />
+                  <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-3xl" />
+                  <div className="absolute top-4 left-4 z-30">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/50 backdrop-blur-sm text-white text-sm font-medium">
+                      Kingfisher
+                    </div>
+                  </div>
+                  <div className="absolute inset-0 z-20 flex items-center justify-center px-4">
+                    <div className="transform translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out text-center pointer-events-none">
+                      <h4 className="text-white text-4xl font-heading uppercase tracking-wide drop-shadow-[0_6px_20px_rgba(0,0,0,0.7)]">
+                        Kingfisher
+                      </h4>
+                      <div className="mt-2 opacity-80 text-sm text-white">
+                        Brand Film
+                      </div>
+                    </div>
+                  </div>
+                </a>
               </div>
             </div>
 
-            {/* Col B: Featured Work text (right 50%) */}
+            {/* Right: vertical text label */}
             <div className="flex items-end justify-center px-8 md:col-span-1 h-4/5 mt-40">
-              <h3
-                className="
-                          font-heading font-semibold
-                          text-[7rem] sm:text-[8rem] leading-tight
-                          bg-gradient-to-b from-coralRed to-hanBlue
-                          bg-clip-text text-transparent
-                          [writing-mode:vertical-rl] [text-orientation:sideways-right] [direction:ltr]
-                          "
-              >
+              <h3 className="font-heading font-semibold text-[7rem] sm:text-[8rem] leading-tight text-primary [writing-mode:vertical-rl] [text-orientation:sideways-right] [direction:ltr]">
                 FEATURED
               </h3>
             </div>
           </div>
         </section>
-        {/* (5c) FOOTER */}
-        {/* (New Section Before Footer) */}
-        <section className="w-full py-5 px-8 bg-secondary">
-          <div className="w-full h-0.5 bg-gradient-to-r from-hanBlue to-secondary my-4" />
 
-          <div className="w-full">
+        <section id="other-works" className="w-full px-10 py-5 bg-secondary">
+          <div className="w-full h-0.5 bg-gradient-to-r from-hanBlue to-secondary my-4" />
+          <div className="w-full pb-5">
             <h2
               className="
                         font-heading font-semibold
                         text-[2rem] sm:text-[3rem] lg:text-[4rem]
                         leading-tight
                         text-left
-                        bg-clip-text text-transparent
-                        bg-gradient-to-br from-hanBlue to-primary
+                        text-primary
+                        uppercase
                         "
             >
-              {String("Other Works").toUpperCase()}
+              Other Works
             </h2>
           </div>
+          {/* Row 1 */}
+          <div className="grid grid-cols-1 md:grid-cols-9 md:grid-rows-2 gap-6">
+            <figure className="group relative rounded-xl overflow-hidden md:col-span-6 md:row-span-2">
+              <video
+                className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                src={`/videos/other_work/04.mp4`}
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="none"
+              />
+              {/* subtle base gradient so text is readable always */}
+              <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
-          <section id="other-works" className="w-full py-10 ">
-            <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-3 gap-6 ">
-              <div className="relative rounded-xl overflow-hidden md:col-span-1 md:row-span-3">
-                <div className="absolute top-0 left-0 bg-black/60 text-white text-sm font-body px-3 py-1 z-20">
+              {/* top-left brand pill */}
+              <figcaption className="absolute top-4 left-4 z-20">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/50 backdrop-blur-sm text-white text-sm font-medium">
                   Vivo
                 </div>
-                <video
-                  className="w-full h-full object-cover"
-                  src={`/videos/other_work/04.mp4`} // Rotating sample videos
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
-              </div>
-              <div className="relative rounded-xl overflow-hidden md:col-span-2 md:row-span-3 ">
-                <div className="absolute top-0 left-0 bg-black/60 text-white text-sm font-body px-3 py-1 z-20">
-                  Baleno
+              </figcaption>
+
+              <a href="work/motion/VivoLockdown">
+                {/* animated center overlay (appears on hover on desktop; always visible on small screens as a bottom strip) */}
+                <div className="absolute inset-0 z-10 flex items-center justify-center px-4">
+                  <div
+                    className="transform translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out text-center pointer-events-none"
+                    aria-hidden
+                  >
+                    <h4 className="text-white text-2xl sm:text-3xl font-heading uppercase tracking-wide drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)]">
+                      Vivo
+                    </h4>
+                    <div className="mt-2 opacity-80 text-xs text-white">
+                      Commercial
+                    </div>
+                  </div>
                 </div>
-                <video
-                  className="w-full h-full object-cover"
-                  src={`/videos/other_work/05.mp4`} // Rotating sample videos
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
-              </div>
-              <div className="relative rounded-xl overflow-hidden md:col-span-1 md:row-span-3">
-                <div className="absolute top-0 left-0 bg-black/60 text-white text-sm font-body px-3 py-1 z-20">
-                  BP Kanika
+              </a>
+
+              {/* accessibility label for screen readers */}
+              <span className="sr-only">Video: Vivo</span>
+            </figure>
+
+            <figure className="group relative rounded-xl overflow-hidden md:col-span-3 md:row-span-1">
+              <video
+                className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                src={`/videos/other_work/06.mp4`}
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="none"
+              />
+              <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+              <figcaption className="absolute top-4 left-4 z-20">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/50 backdrop-blur-sm text-white text-sm font-medium">
+                  Blender Pride
                 </div>
-                <video
-                  className="w-full h-full object-cover"
-                  src={`/videos/other_work/06.mp4`} // Rotating sample videos
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-3 gap-6 mt-10">
-              <div className="relative rounded-xl overflow-hidden md:col-span-2 md:row-span-3">
-                <div className="absolute top-0 left-0 bg-black/60 text-white text-sm font-body px-3 py-1 z-20">
+              </figcaption>
+
+              <a href="work/motion/VivoLockdown">
+                <div className="absolute inset-0 z-10 flex items-center justify-center px-4">
+                  <div className="transform translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out text-center pointer-events-none">
+                    <h4 className="text-white text-2xl sm:text-3xl font-heading uppercase tracking-wide drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)]">
+                      Blender Pride
+                    </h4>
+                    <div className="mt-2 opacity-80 text-xs text-white">
+                      Commercial
+                    </div>
+                  </div>
+                </div>
+              </a>
+
+              <span className="sr-only">Video: Blender Pride</span>
+            </figure>
+            <figure className="group relative rounded-xl overflow-hidden md:col-span-3 md:row-span-1">
+              <video
+                className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                src={`/videos/other_work/07.mp4`}
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="none"
+              />
+              <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+              <figcaption className="absolute top-4 left-4 z-20">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/50 backdrop-blur-sm text-white text-sm font-medium">
+                  Chivas 18 LEP
+                </div>
+              </figcaption>
+              <a href="work/motion/Chivas18LEP-SuzanneKhan">
+                <div className="absolute inset-0 z-10 flex items-center justify-center px-4">
+                  <div className="transform translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out text-center pointer-events-none">
+                    <h4 className="text-white text-2xl sm:text-3xl font-heading uppercase tracking-wide drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)]">
+                      Chivas 18 LEP
+                    </h4>
+                    <div className="mt-2 opacity-80 text-xs text-white">
+                      Product film
+                    </div>
+                  </div>
+                </div>
+              </a>
+
+              <span className="sr-only">Video: Chivas 18 LEP</span>
+            </figure>
+          </div>
+
+          {/* Row 2 */}
+          <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-3 gap-6 mt-10 ">
+            <figure className="group relative rounded-xl overflow-hidden md:col-span-2 md:row-span-3">
+              <video
+                className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                src={`/videos/other_work/01.mp4`}
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="none"
+              />
+              <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+              <figcaption className="absolute top-4 left-4 z-20">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/50 backdrop-blur-sm text-white text-sm font-medium">
                   Society Tea
                 </div>
-                <video
-                  className="w-full h-full object-cover"
-                  src={`/videos/other_work/01.mp4`} // Rotating sample videos
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
-              </div>
-              <div className="relative rounded-xl overflow-hidden md:col-span-1 md:row-span-3">
-                <div className="absolute top-0 left-0 bg-black/60 text-white text-sm font-body px-3 py-1 z-20">
-                  Tata Punch
+              </figcaption>
+              <a href="work/motion/SocietyTea">
+                <div className="absolute inset-0 z-10 flex items-center justify-center px-4">
+                  <div className="transform translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out text-center pointer-events-none">
+                    <h4 className="text-white text-3xl sm:text-4xl font-heading uppercase tracking-wide drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)]">
+                      Society Tea
+                    </h4>
+                    <div className="mt-2 opacity-80 text-xs text-white">
+                      Packaging film
+                    </div>
+                  </div>
                 </div>
-                <video
-                  className="w-full h-full object-cover"
-                  src={`/videos/other_work/02.mp4`} // Rotating sample videos
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
-              </div>
-              <div className="relative rounded-xl overflow-hidden md:col-span-1 md:row-span-3">
-                <div className="absolute top-0 left-0 bg-black/60 text-white text-sm font-body px-3 py-1 z-20">
-                  Tata Punch
-                </div>
-                <video
-                  className="w-full h-full object-cover"
-                  src={`/videos/other_work/03.mp4`} // Rotating sample videos
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
-              </div>
-            </div>
+              </a>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-3 gap-6 mt-10">
-              <div className="relative rounded-xl overflow-hidden md:col-span-1 md:row-span-3">
-                <div className="absolute top-0 left-0 bg-black/60 text-white text-sm font-body px-3 py-1 z-20">
-                  Chivas
+              <span className="sr-only">Video: Society Tea</span>
+            </figure>
+
+            <figure className="group relative rounded-xl overflow-hidden md:col-span-2 md:row-span-3">
+              <video
+                className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                src={`/videos/other_work/03.mp4`}
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="none"
+              />
+              <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+              <figcaption className="absolute top-4 left-4 z-20">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/50 backdrop-blur-sm text-white text-sm font-medium">
+                  Tata Punch
                 </div>
-                <video
-                  className="w-full h-full object-cover"
-                  src={`/videos/other_work/07.mp4`} // Rotating sample videos
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
-              </div>
-              <div className="relative rounded-xl overflow-hidden md:col-span-2 md:row-span-3">
-                <div className="absolute top-0 left-0 bg-black/60 text-white text-sm font-body px-3 py-1 z-20">
-                  Fronx
+              </figcaption>
+
+              <a href="work/motion/TataPunch">
+                <div className="absolute inset-0 z-10 flex items-center justify-center px-4">
+                  <div className="transform translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out text-center pointer-events-none">
+                    <h4 className="text-white text-2xl sm:text-3xl font-heading uppercase tracking-wide drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)]">
+                      Tata Punch
+                    </h4>
+                    <div className="mt-2 opacity-80 text-xs text-white">
+                      Commercial Ad
+                    </div>
+                  </div>
                 </div>
-                <video
-                  className="w-full h-full object-cover"
-                  src={`/videos/other_work/08.mp4`} // Rotating sample videos
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
-              </div>
-              <div className="relative rounded-xl overflow-hidden md:col-span-1 md:row-span-3">
-                <div className="absolute top-0 left-0 bg-black/60 text-white text-sm font-body px-3 py-1 z-20">
+              </a>
+
+              <span className="sr-only">Video: Tata Punch</span>
+            </figure>
+          </div>
+
+          {/* Row 3 */}
+          <div className="grid grid-cols-1 md:grid-cols-9 md:grid-rows-2 gap-6 mt-10">
+            <figure className="group relative rounded-xl overflow-hidden md:col-span-6 md:row-span-2">
+              <video
+                className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                src={`/videos/other_work/08.mp4`}
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="none"
+              />
+              <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+              <figcaption className="absolute top-4 left-4 z-20">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/50 backdrop-blur-sm text-white text-sm font-medium">
+                  Suzuki Fronx
+                </div>
+              </figcaption>
+
+              <a href="work/motion/SuzukiFronx">
+                <div className="absolute inset-0 z-10 flex items-center justify-center px-4">
+                  <div className="transform translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out text-center pointer-events-none">
+                    <h4 className="text-white text-3xl sm:text-4xl font-heading uppercase tracking-wide drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)]">
+                      Suzuki Fronx
+                    </h4>
+                    <div className="mt-2 opacity-80 text-xs text-white">
+                      Commercial
+                    </div>
+                  </div>
+                </div>
+              </a>
+
+              <span className="sr-only">Video: Suzuki Fronx</span>
+            </figure>
+            <figure className="group relative rounded-xl overflow-hidden md:col-span-3 md:row-span-1">
+              <video
+                className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                src={`/videos/other_work/05.mp4`}
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="none"
+              />
+              <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+              <figcaption className="absolute top-4 left-4 z-20">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/50 backdrop-blur-sm text-white text-sm font-medium">
+                  Suzuki Baleno
+                </div>
+              </figcaption>
+              <a href="work/motion/SuzukiBaleno">
+                <div className="absolute inset-0 z-10 flex items-center justify-center px-4">
+                  <div className="transform translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out text-center pointer-events-none">
+                    <h4 className="text-white text-3xl sm:text-4xl font-heading uppercase tracking-wide drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)]">
+                      Suzuki Baleno
+                    </h4>
+                    <div className="mt-2 opacity-80 text-xs text-white">
+                      Commercial
+                    </div>
+                  </div>
+                </div>
+              </a>
+
+              <span className="sr-only">Video: Suzuki Baleno</span>
+            </figure>
+            <figure className="group relative rounded-xl overflow-hidden md:col-span-3 md:row-span-1">
+              <video
+                className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                src={`/videos/other_work/09.mp4`}
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="none"
+              />
+              <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+              <figcaption className="absolute top-4 left-4 z-20">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/50 backdrop-blur-sm text-white text-sm font-medium">
                   Oaken Glow
                 </div>
-                <video
-                  className="w-full h-full object-cover"
-                  src={`/videos/other_work/09.mp4`} // Rotating sample videos
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-rows-3 gap-6 mt-5">
-              <div className="relative rounded-xl overflow-hidden md:col-span-1 md:row-span-3 text-right">
-                <div className="absolute top-0 text-white text-xs px-1 py-1 z-20 text-right right-0 underline-offset-2 underline">
-                  SHOW ALL
+              </figcaption>
+              <a href="work/motion/SuzukiBaleno">
+                <div className="absolute inset-0 z-10 flex items-center justify-center px-4">
+                  <div className="transform translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out text-center pointer-events-none">
+                    <h4 className="text-white text-2xl sm:text-3xl font-heading uppercase tracking-wide drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)]">
+                      Oaken Glow
+                    </h4>
+                    <div className="mt-2 opacity-80 text-xs text-white">
+                      Product Film
+                    </div>
+                  </div>
+                </div>
+              </a>
+
+              <span className="sr-only">Video: Oaken Glow</span>
+            </figure>
+            {/* <figure className="group relative rounded-xl overflow-hidden md:col-span-6 md:row-span-1">
+              <video
+                className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                src={`/videos/other_work/02.mp4`}
+                autoPlay
+                loop
+                muted
+                playsInline
+              />
+              <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+              <figcaption className="absolute top-4 left-4 z-20">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/50 backdrop-blur-sm text-white text-sm font-medium">
+                  Tata Punch
+                </div>
+              </figcaption>
+
+              <div className="absolute inset-0 z-10 flex items-center justify-center px-4">
+                <div className="transform translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out text-center pointer-events-none">
+                  <h4 className="text-white text-2xl sm:text-3xl font-heading uppercase tracking-wide drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)]">
+                    Tata Punch
+                  </h4>
+                  <div className="mt-2 opacity-80 text-xs text-white">
+                    Social cut
+                  </div>
                 </div>
               </div>
-            </div>
-          </section>
-          {/* <div className="grid grid-cols-2 divide-x divide-gray-400 mt-5">
-            <div className="flex flex-col items-left justify-center p-8">
-              <h2 className="text-white text-3xl font-heading font-bold mb-4">
-                Some Heading
-              </h2>
-              <p className="text-white text-lg text-left">
-                Some content goes here
-              </p>
-            </div>
 
-            <div className="flex flex-col items-left justify-center p-8">
-              <h2 className="text-white text-3xl font-heading font-bold mb-4">
-                Some Heading2
-              </h2>
-              <p className="text-white text-lg text-left">
-                Some content2 goes here
-              </p>
+              <span className="sr-only">Video: Tata Punch</span>
+            </figure> */}
+          </div>
+
+          {/* show all row */}
+          <div className="grid grid-cols-1 md:grid-rows-3 gap-6 mt-5">
+            <div className="relative rounded-xl overflow-hidden md:col-span-1 md:row-span-3 text-right">
+              <div className="absolute inset-0 flex items-end justify-end p-4">
+                <a
+                  href="/allworks/motion"
+                  className="inline-block bg-white/10 hover:bg-white/20 text-white text-xs px-3 py-2 rounded backdrop-blur-sm transition-colors duration-200"
+                >
+                  SHOW ALL
+                </a>
+              </div>
             </div>
-          </div> */}
+          </div>
         </section>
 
         <Footer />
       </div>
-    </main>
+    </div>
   );
 };
 
 export const Head = () => (
   <>
-    <title>Epitome</title>;
+    <title>Epitome</title>
     <link rel="icon" href="/favicon.ico" />
   </>
 );
