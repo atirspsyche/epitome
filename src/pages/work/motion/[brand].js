@@ -11,6 +11,33 @@ import NavMenu from "../../../components/menu";
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Custom hook for responsive video scaling
+const useVideoScale = () => {
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    const calculateScale = () => {
+      const windowRatio = window.innerWidth / window.innerHeight;
+      const videoRatio = 16 / 9; // Assuming 16:9 aspect ratio, adjust as needed
+
+      if (windowRatio < videoRatio) {
+        // Window is taller than video ratio, scale based on height
+        setScale(window.innerHeight / (window.innerWidth / videoRatio));
+      } else {
+        // Window is wider than video ratio, scale based on width
+        setScale(window.innerWidth / (window.innerHeight * videoRatio));
+      }
+    };
+
+    calculateScale();
+    window.addEventListener("resize", calculateScale);
+
+    return () => window.removeEventListener("resize", calculateScale);
+  }, []);
+
+  return scale;
+};
+
 function Motion({ params }) {
   const brand = params?.brand;
   console.log(brand);
@@ -22,6 +49,41 @@ function Motion({ params }) {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const bgVidRef = useRef();
+  const videoScale = useVideoScale();
+
+  // Video optimization - only play videos when visible
+  useEffect(() => {
+    const videos = document.querySelectorAll("video[data-lazy]");
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const video = entry.target;
+          if (entry.isIntersecting) {
+            video.classList.add("playing");
+            if (video.paused) {
+              video.play().catch(console.log);
+            }
+          } else {
+            video.classList.remove("playing");
+            if (!video.paused) {
+              video.pause();
+            }
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "50px",
+      }
+    );
+
+    videos.forEach((video) => observer.observe(video));
+
+    return () => {
+      videos.forEach((video) => observer.unobserve(video));
+    };
+  }, []);
 
   useEffect(() => {
     if (menuOpen) {
@@ -69,10 +131,11 @@ function Motion({ params }) {
           className="absolute inset-0 w-full h-full object-cover opacity-0"
           src="/videos/header-sprinkles.mp4"
           ref={bgVidRef}
-          autoPlay
+          data-lazy="true"
           muted
           loop
           playsInline
+          preload="metadata"
         />
 
         {/* Overlay on top of video for slight darkening (optional) */}
@@ -116,26 +179,41 @@ function Motion({ params }) {
       </header>
       <NavMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
 
-      <div className="fixed inset-0 object-cover z-0 pointer-events-auto overflow-hidden">
+      <div className="fixed inset-0 object-cover z-0 pointer-events-auto overflow-hidden bg-black">
         <ReactPlayer
           src={currentBrand.main_video_url}
-          autoPlay
-          // muted
-          loop
+          playing={true}
+          muted={true}
+          loop={true}
+          width="100%"
+          height="100%"
           config={{
-            vimeo: {},
+            vimeo: {
+              playerOptions: {
+                background: true,
+                controls: false,
+                title: false,
+                byline: false,
+                portrait: false,
+                autoplay: true,
+                autopause: false,
+                muted: true,
+                responsive: true,
+              },
+            },
           }}
-          // className="absolute w-screen h-screen object-cover"
           style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
             width: "100vw",
             height: "100vh",
-            objectFit: "cover",
-            // aspectRatio: "16/9",
+            transform: "translate(-50%, -50%)",
+            minWidth: "100%",
+            minHeight: "100%",
           }}
-          className="react-player"
-          // playsInline
-          // poster="https://framerusercontent.com/images/VUV2f8sCgxYb8DuOlREjil5Uuc0.jpg"
-          controls
+          className="react-player-crop"
+          controls={false}
         />
         {/* <iframe
           style={{
@@ -227,10 +305,11 @@ function Motion({ params }) {
               <video
                 src={`/videos/${b.url}`}
                 className="inset-0 w-full h-full object-cover"
-                autoPlay
+                data-lazy="true"
                 muted
                 loop
                 playsInline
+                preload="metadata"
               />
             )
           )}
@@ -247,10 +326,11 @@ function Motion({ params }) {
               <div>
                 <video
                   src={`/videos/${b.url}`}
-                  autoPlay
+                  data-lazy="true"
                   muted
                   loop
                   playsInline
+                  preload="metadata"
                 />
               </div>
             )
@@ -268,10 +348,11 @@ function Motion({ params }) {
               <video
                 src={`/videos/${b.url}`}
                 className="inset-0 w-full h-full object-cover"
-                autoPlay
+                data-lazy="true"
                 muted
                 loop
                 playsInline
+                preload="metadata"
               />
             )
           )}
@@ -288,10 +369,11 @@ function Motion({ params }) {
               <div>
                 <video
                   src={`/videos/${b.url}`}
-                  autoPlay
+                  data-lazy="true"
                   muted
                   loop
                   playsInline
+                  preload="metadata"
                 />
               </div>
             )
@@ -309,10 +391,11 @@ function Motion({ params }) {
               <video
                 src={`/videos/${b.url}`}
                 className="inset-0 w-full h-full object-cover"
-                autoPlay
+                data-lazy="true"
                 muted
                 loop
                 playsInline
+                preload="metadata"
               />
             )
           )}

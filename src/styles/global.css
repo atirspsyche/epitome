@@ -38,12 +38,67 @@ video {
   position: relative;
   z-index: 10;
   pointer-events: auto;
+  /* Performance optimizations */
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Optimize video rendering */
+video[data-lazy] {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+video[data-lazy].playing {
+  opacity: 1;
 }
 
 .react-player video {
   object-fit: cover !important;
   width: 100% !important;
   height: 100% !important;
+}
+
+/* Force Vimeo iframe to fill container */
+.react-player iframe {
+  object-fit: cover !important;
+  width: 100% !important;
+  height: 100% !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) scale(1.5) !important;
+  min-width: 100% !important;
+  min-height: 100% !important;
+}
+
+/* Container for react-player to ensure proper scaling */
+.react-player {
+  position: absolute !important;
+  overflow: hidden !important;
+}
+
+/* Alternative approach - crop to fit */
+.react-player-crop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.react-player-crop iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100vw;
+  height: 56.25vw; /* 16:9 aspect ratio */
+  min-height: 100vh;
+  min-width: 177.78vh; /* 16:9 aspect ratio */
+  transform: translate(-50%, -50%);
 }
 
 /* put in src/styles/global.css or tailwind layer */

@@ -1,5 +1,5 @@
 // src/pages/MainLanding.jsx
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Footer from "../components/footer";
@@ -20,7 +20,54 @@ const MainLanding = () => {
   const [showSplash, setShowSplash] = useState(true);
   const splashRef = useRef(null);
 
+  // Video optimization - only play videos when visible
+  const useVideoObserver = useCallback(() => {
+    useEffect(() => {
+      const videos = document.querySelectorAll("video[data-lazy]");
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const video = entry.target;
+            if (entry.isIntersecting) {
+              video.classList.add("playing");
+              if (video.paused) {
+                video.play().catch(console.log);
+              }
+            } else {
+              video.classList.remove("playing");
+              if (!video.paused) {
+                video.pause();
+              }
+            }
+          });
+        },
+        {
+          threshold: 0.1,
+          rootMargin: "50px",
+        }
+      );
+
+      videos.forEach((video) => observer.observe(video));
+
+      return () => {
+        videos.forEach((video) => observer.unobserve(video));
+      };
+    }, []);
+  }, []);
+
+  useVideoObserver();
+
   useEffect(() => {
+    // Throttle scroll updates for better performance
+    ScrollTrigger.config({
+      limitCallbacks: true,
+      syncInterval: 16, // ~60fps
+    });
+
+    // Clear all existing ScrollTriggers first
+    ScrollTrigger.getAll().forEach((st) => st.kill());
+
     gsap.to(overlayRef.current, {
       yPercent: -100,
       ease: "power2.out",
@@ -255,11 +302,11 @@ const MainLanding = () => {
           className="absolute inset-0 w-full h-full object-cover opacity-0"
           src="/videos/header-sprinkles.mp4"
           ref={bgVidRef}
-          autoPlay
+          data-lazy="true"
           muted
           loop
           playsInline
-          preload="none"
+          preload="metadata"
         />
 
         <div
@@ -300,10 +347,17 @@ const MainLanding = () => {
       <video
         className="fixed inset-0 w-full h-full object-cover -z-10"
         src="/videos/bg/home.mp4"
-        autoPlay
-        muted
-        loop
-        playsInline
+        ref={(el) => {
+          if (el) {
+            el.muted = true;
+            el.loop = true;
+            el.playsInline = true;
+            // Only start playing after splash is done
+            if (!showSplash) {
+              el.play().catch(console.log);
+            }
+          }
+        }}
       />
 
       <NavMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
@@ -395,12 +449,12 @@ const MainLanding = () => {
                 >
                   <video
                     src={item.src}
-                    className="w-full h-full object-cover"
-                    autoPlay
-                    loop
+                    className="w-full h-full object-cover mobile-video"
+                    data-lazy="true"
                     muted
+                    loop
                     playsInline
-                    preload="none"
+                    preload="metadata"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                   <div className="absolute bottom-4 left-4 px-3 py-1 rounded-full bg-black/50 text-white text-sm">
@@ -426,11 +480,11 @@ const MainLanding = () => {
                   <video
                     src="/videos/featured/akshat.mp4"
                     className="feat-video absolute inset-0 w-full h-full object-cover rounded-3xl"
-                    autoPlay
+                    data-lazy="true"
                     loop
                     muted
                     playsInline
-                    preload="none"
+                    preload="metadata"
                   />
                   {/* gradient base so text remains readable */}
                   <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-3xl" />
@@ -463,11 +517,11 @@ const MainLanding = () => {
                   <video
                     src="/videos/featured/oaken.mp4"
                     className="feat-video absolute inset-0 w-full h-full object-cover rounded-3xl"
-                    autoPlay
+                    data-lazy="true"
                     loop
                     muted
                     playsInline
-                    preload="none"
+                    preload="metadata"
                   />
                   <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-3xl" />
                   <div className="absolute top-4 left-4 z-30">
@@ -495,11 +549,11 @@ const MainLanding = () => {
                   <video
                     src="/videos/featured/dzire.mp4"
                     className="feat-video absolute inset-0 w-full h-full object-cover rounded-3xl"
-                    autoPlay
+                    data-lazy="true"
                     loop
                     muted
                     playsInline
-                    preload="none"
+                    preload="metadata"
                   />
                   <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-3xl" />
                   <div className="absolute top-4 left-4 z-30">
@@ -527,11 +581,11 @@ const MainLanding = () => {
                   <video
                     src="/videos/featured/ballentines.mp4"
                     className="feat-video absolute inset-0 w-full h-full object-cover rounded-3xl"
-                    autoPlay
+                    data-lazy="true"
                     loop
                     muted
                     playsInline
-                    preload="none"
+                    preload="metadata"
                   />
                   <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-3xl" />
                   <div className="absolute top-4 left-4 z-30">
@@ -559,11 +613,11 @@ const MainLanding = () => {
                   <video
                     src="/videos/featured/kingfisher.mp4"
                     className="feat-video absolute inset-0 w-full h-full object-cover rounded-3xl"
-                    autoPlay
+                    data-lazy="true"
                     loop
                     muted
                     playsInline
-                    preload="none"
+                    preload="metadata"
                   />
                   <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-3xl" />
                   <div className="absolute top-4 left-4 z-30">
@@ -616,11 +670,11 @@ const MainLanding = () => {
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                 src={`/videos/other_work/04.mp4`}
-                autoPlay
+                data-lazy="true"
                 loop
                 muted
                 playsInline
-                preload="none"
+                preload="metadata"
               />
               {/* subtle base gradient so text is readable always */}
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
@@ -657,11 +711,11 @@ const MainLanding = () => {
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                 src={`/videos/other_work/06.mp4`}
-                autoPlay
+                data-lazy="true"
                 loop
                 muted
                 playsInline
-                preload="none"
+                preload="metadata"
               />
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
@@ -690,11 +744,11 @@ const MainLanding = () => {
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                 src={`/videos/other_work/07.mp4`}
-                autoPlay
+                data-lazy="true"
                 loop
                 muted
                 playsInline
-                preload="none"
+                preload="metadata"
               />
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
@@ -726,11 +780,11 @@ const MainLanding = () => {
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                 src={`/videos/other_work/01.mp4`}
-                autoPlay
+                data-lazy="true"
                 loop
                 muted
                 playsInline
-                preload="none"
+                preload="metadata"
               />
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
@@ -759,11 +813,11 @@ const MainLanding = () => {
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                 src={`/videos/other_work/03.mp4`}
-                autoPlay
+                data-lazy="true"
                 loop
                 muted
                 playsInline
-                preload="none"
+                preload="metadata"
               />
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
@@ -796,11 +850,11 @@ const MainLanding = () => {
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                 src={`/videos/other_work/08.mp4`}
-                autoPlay
+                data-lazy="true"
                 loop
                 muted
                 playsInline
-                preload="none"
+                preload="metadata"
               />
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
@@ -829,11 +883,11 @@ const MainLanding = () => {
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                 src={`/videos/other_work/05.mp4`}
-                autoPlay
+                data-lazy="true"
                 loop
                 muted
                 playsInline
-                preload="none"
+                preload="metadata"
               />
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
@@ -861,11 +915,11 @@ const MainLanding = () => {
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                 src={`/videos/other_work/09.mp4`}
-                autoPlay
+                data-lazy="true"
                 loop
                 muted
                 playsInline
-                preload="none"
+                preload="metadata"
               />
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
