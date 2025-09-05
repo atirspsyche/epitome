@@ -1,4 +1,5 @@
 const path = require("path");
+import "./src/styles/global.css";
 
 const motionBrands = require("./src/data/motion-data.json");
 const stillBrands = require("./src/data/still-data.json");

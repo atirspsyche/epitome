@@ -4,10 +4,13 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Footer from "../components/footer";
 import NavMenu from "../components/menu";
+// import PerformanceMonitor from "../components/performance-monitor";
+import "../styles/performance.css";
 
 // Heroicon for the burger:
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import useVideoObserver from "../components/video-observer";
+import useSimpleVideoObserver from "../components/simple-video-observer";
+// import useEnhancedVideoObserver from "../components/enhanced-video-observer";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -21,78 +24,132 @@ const MainLanding = () => {
   const [showSplash, setShowSplash] = useState(true);
   const splashRef = useRef(null);
 
-  // Video optimization - only play videos when visible
+  // Video optimization - simple approach for reliability
+  useSimpleVideoObserver();
 
-  useVideoObserver();
+  // Throttled scroll performance optimization
+  useEffect(() => {
+    let rafId;
+    let lastScrollY = 0;
+
+    const handleScroll = () => {
+      if (rafId) return;
+
+      rafId = requestAnimationFrame(() => {
+        const currentScrollY = window.scrollY;
+        const scrollDelta = Math.abs(currentScrollY - lastScrollY);
+
+        // If scrolling very fast, reduce quality temporarily
+        if (scrollDelta > 100) {
+          document.body.classList.add("fast-scroll");
+
+          // Remove class after scroll settles
+          clearTimeout(window.fastScrollTimeout);
+          window.fastScrollTimeout = setTimeout(() => {
+            document.body.classList.remove("fast-scroll");
+          }, 150);
+        }
+
+        lastScrollY = currentScrollY;
+        rafId = null;
+      });
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (rafId) cancelAnimationFrame(rafId);
+      clearTimeout(window.fastScrollTimeout);
+    };
+  }, []);
 
   useEffect(() => {
-    // Throttle scroll updates for better performance
+    // Enhanced ScrollTrigger performance configuration
     ScrollTrigger.config({
       limitCallbacks: true,
       syncInterval: 16, // ~60fps
+      ignoreMobileResize: true, // Better mobile performance
     });
 
     // Clear all existing ScrollTriggers first
     ScrollTrigger.getAll().forEach((st) => st.kill());
 
-    gsap.to(overlayRef.current, {
+    // Throttled overlay animation
+    let overlayTween = gsap.to(overlayRef.current, {
       yPercent: -100,
       ease: "power2.out",
       scrollTrigger: {
         trigger: overlayRef.current,
         start: "top top",
         end: "bottom top",
-        scrub: true,
+        scrub: 1, // Reduced scrub for smoother performance
         onUpdate: (self) => {
-          const raw = self.progress;
-          const fadeStart = 0.95;
-          const fadeRange = 1 - fadeStart;
-          let opacity = (raw - fadeStart) / fadeRange;
-          opacity = Math.min(Math.max(opacity, 0), 1);
-          if (bgVidRef.current) bgVidRef.current.style.opacity = opacity;
+          // Throttle expensive operations
+          if (self.progress > 0.95 && bgVidRef.current) {
+            const opacity = Math.min(
+              Math.max((self.progress - 0.95) / 0.05, 0),
+              1
+            );
+            bgVidRef.current.style.opacity = opacity;
+          }
         },
       },
     });
 
+    // Gallery horizontal scroll with performance optimization
     const galleryEl = galleryRef.current;
     const innerEl = galleryInnerRef.current;
 
+    let galleryTween;
     if (galleryEl && innerEl) {
-      const totalScrollWidth =
-        innerEl.scrollWidth - window.innerWidth + 0.2 * innerEl.scrollWidth;
+      // Use requestAnimationFrame for smoother calculations
+      requestAnimationFrame(() => {
+        const totalScrollWidth =
+          innerEl.scrollWidth - window.innerWidth + 0.2 * innerEl.scrollWidth;
 
-      gsap.to(innerEl, {
-        x: -totalScrollWidth,
-        ease: "none",
-        scrollTrigger: {
-          trigger: galleryEl,
-          start: "top top",
-          end: () => `+=${innerEl.scrollWidth}`,
-          scrub: true,
-          pin: true,
-          pinSpacing: false,
-        },
+        galleryTween = gsap.to(innerEl, {
+          x: -totalScrollWidth,
+          ease: "none",
+          scrollTrigger: {
+            trigger: galleryEl,
+            start: "top top",
+            end: () => `+=${innerEl.scrollWidth}`,
+            scrub: 1, // Reduced for performance
+            pin: true,
+            pinSpacing: false,
+            invalidateOnRefresh: true, // Better responsive behavior
+          },
+        });
       });
     }
 
     return () => {
+      // Proper cleanup
       ScrollTrigger.getAll().forEach((st) => st.kill());
+      if (overlayTween) overlayTween.kill();
+      if (galleryTween) galleryTween.kill();
     };
   }, []);
 
   useEffect(() => {
     if (window.innerWidth < 768) {
-      gsap.utils.toArray(".mobile-video").forEach((el) => {
-        gsap.from(el, {
-          y: 50,
-          opacity: 0,
-          duration: 0.6,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: el,
-            start: "top 90%",
-            toggleActions: "play none none none",
-          },
+      // Use requestAnimationFrame for better mobile performance
+      requestAnimationFrame(() => {
+        gsap.utils.toArray(".mobile-video").forEach((el, index) => {
+          gsap.from(el, {
+            y: 50,
+            opacity: 0,
+            duration: 0.4, // Reduced duration for better performance
+            ease: "power2.out",
+            delay: index * 0.1, // Stagger the animations
+            scrollTrigger: {
+              trigger: el,
+              start: "top 90%",
+              toggleActions: "play none none none",
+              once: true, // Only animate once for better performance
+            },
+          });
         });
       });
     }
@@ -147,7 +204,7 @@ const MainLanding = () => {
   //   return () => ctx.revert();
   // }, []);
 
-  // inside the useEffect that currently builds the featured timeline:
+  // Enhanced featured section animation with performance optimization
   useEffect(() => {
     // nothing to do if the ref isn't mounted
     if (!featuredRef.current) return;
@@ -161,29 +218,47 @@ const MainLanding = () => {
       const cards = Array.from(el.querySelectorAll(".feat-card"));
       if (!cards.length) return; // nothing to animate
 
+      // Use will-change for better performance
+      cards.forEach((card) => {
+        card.style.willChange = "transform";
+      });
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: el,
           start: "top top",
           end: "+=250%",
-          scrub: true,
+          scrub: 1, // Reduced scrub for smoother performance
           pin: true,
+          anticipatePin: 1, // Better pin performance
         },
       });
 
       const xValues = [98, 96, 94, 92];
       cards.slice(1, 1 + xValues.length).forEach((card, i) => {
-        tl.to(card, { xPercent: xValues[i], duration: 1, ease: "none" }, i);
+        tl.to(
+          card,
+          {
+            xPercent: xValues[i],
+            duration: 1,
+            ease: "none",
+            force3D: true, // Force hardware acceleration
+          },
+          i
+        );
       });
 
-      // (optional) If you want the first card to have an entrance/opacity tweak:
-      // tl.fromTo(cards[0], { opacity: 0.98 }, { opacity: 1, duration: 1 }, 0);
+      // Cleanup performance hints on destroy
+      return () => {
+        cards.forEach((card) => {
+          card.style.willChange = "auto";
+        });
+      };
     }, featuredRef); // scope the context to the ref
 
     return () => {
       // cleanup
       ctx.revert();
-      ScrollTrigger.getAll().forEach((st) => st.kill());
     };
   }, []); // runs after mount
 
@@ -225,8 +300,30 @@ const MainLanding = () => {
     }
   }, [showSplash]);
 
+  // Enhanced resize handler with debouncing
+  useEffect(() => {
+    let resizeTimeout;
+
+    const handleResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 250);
+    };
+
+    window.addEventListener("resize", handleResize, { passive: true });
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      clearTimeout(resizeTimeout);
+    };
+  }, []);
+
   return (
     <div className="relative overflow-x-hidden">
+      {/* Performance Monitor - temporarily disabled */}
+      {/* <PerformanceMonitor showMonitor={process.env.NODE_ENV === "development"} /> */}
+
       {/* ======= STATIC THIN BARS (on top of everything) =======
           - 5px width each (w-[5px])
           - vertical gradient top→bottom
@@ -415,13 +512,13 @@ const MainLanding = () => {
                   className="relative block rounded-3xl overflow-hidden h-64"
                 >
                   <video
-                    src={item.src}
+                    data-src={item.src}
                     className="w-full h-full object-cover mobile-video"
                     data-lazy="true"
                     muted
                     loop
                     playsInline
-                    preload="metadata"
+                    preload="none"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                   <div className="absolute bottom-4 left-4 px-3 py-1 rounded-full bg-black/50 text-white text-sm">
@@ -445,13 +542,13 @@ const MainLanding = () => {
                   style={{ transform: "translateX(0%)" }}
                 >
                   <video
-                    src="/videos/featured/akshat.mp4"
+                    data-src="/videos/featured/akshat.mp4"
                     className="feat-video absolute inset-0 w-full h-full object-cover rounded-3xl"
                     data-lazy="true"
                     loop
                     muted
                     playsInline
-                    preload="metadata"
+                    preload="none"
                   />
                   {/* gradient base so text remains readable */}
                   <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-3xl" />
@@ -482,13 +579,13 @@ const MainLanding = () => {
                   style={{ transform: "translateX(-100%)" }}
                 >
                   <video
-                    src="/videos/featured/oaken.mp4"
+                    data-src="/videos/featured/oaken.mp4"
                     className="feat-video absolute inset-0 w-full h-full object-cover rounded-3xl"
                     data-lazy="true"
                     loop
                     muted
                     playsInline
-                    preload="metadata"
+                    preload="none"
                   />
                   <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-3xl" />
                   <div className="absolute top-4 left-4 z-30">
@@ -514,13 +611,13 @@ const MainLanding = () => {
                   style={{ transform: "translateX(-100%)" }}
                 >
                   <video
-                    src="/videos/featured/dzire.mp4"
+                    data-src="/videos/featured/dzire.mp4"
                     className="feat-video absolute inset-0 w-full h-full object-cover rounded-3xl"
                     data-lazy="true"
                     loop
                     muted
                     playsInline
-                    preload="metadata"
+                    preload="none"
                   />
                   <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-3xl" />
                   <div className="absolute top-4 left-4 z-30">
@@ -546,13 +643,13 @@ const MainLanding = () => {
                   style={{ transform: "translateX(-100%)" }}
                 >
                   <video
-                    src="/videos/featured/ballentines.mp4"
+                    data-src="/videos/featured/ballentines.mp4"
                     className="feat-video absolute inset-0 w-full h-full object-cover rounded-3xl"
                     data-lazy="true"
                     loop
                     muted
                     playsInline
-                    preload="metadata"
+                    preload="none"
                   />
                   <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-3xl" />
                   <div className="absolute top-4 left-4 z-30">
@@ -578,13 +675,13 @@ const MainLanding = () => {
                   style={{ transform: "translateX(-100%)" }}
                 >
                   <video
-                    src="/videos/featured/kingfisher.mp4"
+                    data-src="/videos/featured/kingfisher.mp4"
                     className="feat-video absolute inset-0 w-full h-full object-cover rounded-3xl"
                     data-lazy="true"
                     loop
                     muted
                     playsInline
-                    preload="metadata"
+                    preload="none"
                   />
                   <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-3xl" />
                   <div className="absolute top-4 left-4 z-30">
@@ -636,12 +733,12 @@ const MainLanding = () => {
             <figure className="group relative rounded-xl overflow-hidden md:col-span-6 md:row-span-2">
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                src={`/videos/other_work/04.mp4`}
+                data-src={`/videos/other_work/04.mp4`}
                 data-lazy="true"
                 loop
                 muted
                 playsInline
-                preload="metadata"
+                preload="none"
               />
               {/* subtle base gradient so text is readable always */}
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
@@ -677,12 +774,12 @@ const MainLanding = () => {
             <figure className="group relative rounded-xl overflow-hidden md:col-span-3 md:row-span-1">
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                src={`/videos/other_work/06.mp4`}
+                data-src={`/videos/other_work/06.mp4`}
                 data-lazy="true"
                 loop
                 muted
                 playsInline
-                preload="metadata"
+                preload="none"
               />
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
@@ -710,12 +807,12 @@ const MainLanding = () => {
             <figure className="group relative rounded-xl overflow-hidden md:col-span-3 md:row-span-1">
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                src={`/videos/other_work/07.mp4`}
+                data-src={`/videos/other_work/07.mp4`}
                 data-lazy="true"
                 loop
                 muted
                 playsInline
-                preload="metadata"
+                preload="none"
               />
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
@@ -746,12 +843,12 @@ const MainLanding = () => {
             <figure className="group relative rounded-xl overflow-hidden md:col-span-2 md:row-span-3">
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                src={`/videos/other_work/01.mp4`}
+                data-src={`/videos/other_work/01.mp4`}
                 data-lazy="true"
                 loop
                 muted
                 playsInline
-                preload="metadata"
+                preload="none"
               />
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
@@ -779,12 +876,12 @@ const MainLanding = () => {
             <figure className="group relative rounded-xl overflow-hidden md:col-span-2 md:row-span-3">
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                src={`/videos/other_work/03.mp4`}
+                data-src={`/videos/other_work/03.mp4`}
                 data-lazy="true"
                 loop
                 muted
                 playsInline
-                preload="metadata"
+                preload="none"
               />
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
@@ -816,12 +913,12 @@ const MainLanding = () => {
             <figure className="group relative rounded-xl overflow-hidden md:col-span-6 md:row-span-2">
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                src={`/videos/other_work/08.mp4`}
+                data-src={`/videos/other_work/08.mp4`}
                 data-lazy="true"
                 loop
                 muted
                 playsInline
-                preload="metadata"
+                preload="none"
               />
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
@@ -849,12 +946,12 @@ const MainLanding = () => {
             <figure className="group relative rounded-xl overflow-hidden md:col-span-3 md:row-span-1">
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                src={`/videos/other_work/05.mp4`}
+                data-src={`/videos/other_work/05.mp4`}
                 data-lazy="true"
                 loop
                 muted
                 playsInline
-                preload="metadata"
+                preload="none"
               />
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
@@ -881,12 +978,12 @@ const MainLanding = () => {
             <figure className="group relative rounded-xl overflow-hidden md:col-span-3 md:row-span-1">
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                src={`/videos/other_work/09.mp4`}
+                data-src={`/videos/other_work/09.mp4`}
                 data-lazy="true"
                 loop
                 muted
                 playsInline
-                preload="metadata"
+                preload="none"
               />
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 

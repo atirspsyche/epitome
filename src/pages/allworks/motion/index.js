@@ -119,20 +119,40 @@ function AllWork() {
         playsInline
       />
       <div className="fixed inset-10 z-10 flex justify-start items-end">
-        <ul className="text-white text-2xl md:text-5xl font-heading font-semibold ">
-          <li className="mb-10 text-6xl">Motion</li>
+        <div className="text-white text-2xl md:text-5xl font-heading font-semibold">
+          <div className="mb-10 text-6xl">Motion</div>
 
-          {brandList.map((el, i) => (
-            <li className="brand-list">
-              <Link
-                className="opacity-30 transition-all duration-500 transform  md:hover:opacity-100 md:hover:text-6xl "
-                to={`/work/motion/${el.replace(/\s+/g, "")}`}
-              >
-                {el}
-              </Link>
-            </li>
-          ))}
-        </ul>
+          <div className="flex gap-16">
+            {/* Split into two columns */}
+            <ul className="flex flex-col">
+              {brandList
+                .slice(0, Math.ceil(brandList.length / 2))
+                .map((el, i) => (
+                  <li key={i} className="brand-list">
+                    <Link
+                      className="opacity-30 transition-all duration-500 transform md:hover:opacity-100 md:hover:text-6xl"
+                      to={`/work/motion/${el.replace(/\s+/g, "")}`}
+                    >
+                      {el}
+                    </Link>
+                  </li>
+                ))}
+            </ul>
+
+            <ul className="flex flex-col">
+              {brandList.slice(Math.ceil(brandList.length / 2)).map((el, i) => (
+                <li key={i} className="brand-list">
+                  <Link
+                    className="opacity-30 transition-all duration-500 transform md:hover:opacity-100 md:hover:text-6xl"
+                    to={`/work/motion/${el.replace(/\s+/g, "")}`}
+                  >
+                    {el}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </div>
     </main>
   );
