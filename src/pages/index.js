@@ -7,6 +7,7 @@ import NavMenu from "../components/menu";
 
 // Heroicon for the burger:
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import useVideoObserver from "../components/video-observer";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -21,40 +22,6 @@ const MainLanding = () => {
   const splashRef = useRef(null);
 
   // Video optimization - only play videos when visible
-  const useVideoObserver = useCallback(() => {
-    useEffect(() => {
-      const videos = document.querySelectorAll("video[data-lazy]");
-
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            const video = entry.target;
-            if (entry.isIntersecting) {
-              video.classList.add("playing");
-              if (video.paused) {
-                video.play().catch(console.log);
-              }
-            } else {
-              video.classList.remove("playing");
-              if (!video.paused) {
-                video.pause();
-              }
-            }
-          });
-        },
-        {
-          threshold: 0.1,
-          rootMargin: "50px",
-        }
-      );
-
-      videos.forEach((video) => observer.observe(video));
-
-      return () => {
-        videos.forEach((video) => observer.unobserve(video));
-      };
-    }, []);
-  }, []);
 
   useVideoObserver();
 
