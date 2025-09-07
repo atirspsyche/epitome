@@ -9,13 +9,10 @@ import NavMenu from "../../components/menu";
 gsap.registerPlugin(ScrollTrigger);
 
 const brandList = [
-  "Artlist",
-  "Society Tea",
-  "Brand 3",
-  "Brand 4",
-  "Brand 5",
-  "Brand 6",
-  "Brand 7",
+  { name: "Motion", folder: "motion" },
+  { name: "Still", folder: "still" },
+  { name: "Short Film", folder: "films" },
+  { name: "Digital", folder: "digital" },
 ];
 
 function AllWork() {
@@ -135,9 +132,9 @@ function AllWork() {
             <li className="brand-list">
               <Link
                 className="opacity-30 transition-all duration-500 transform  md:hover:opacity-100 md:hover:text-6xl "
-                to={`/work/stills/${el}`}
+                to={`/allworks/${el.folder}`}
               >
-                {el}
+                {el.name}
               </Link>
             </li>
           ))}
