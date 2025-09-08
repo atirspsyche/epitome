@@ -42,9 +42,9 @@ export default function NavMenu({ menuOpen, setMenuOpen }) {
         {
           y: 0,
           opacity: 1,
-          ease: "back.out(1.7)",
-          duration: 0.5,
-          stagger: 0.12,
+          ease: "back.out(0.5)",
+          duration: 1.3,
+          stagger: 0.05,
         }
       );
 
@@ -56,14 +56,14 @@ export default function NavMenu({ menuOpen, setMenuOpen }) {
           y: 0,
           opacity: 1,
           ease: "power2.out",
-          duration: 0.35,
-          stagger: 0.08,
-          delay: 0.25,
+          duration: 1.3,
+          stagger: 0.05,
+          delay: 0.35,
         }
       );
     } else {
-      gsap.to(".menu-item", { opacity: 0, y: -50, duration: 0.18 });
-      gsap.to(".submenu-item", { opacity: 0, y: -12, duration: 0.12 });
+      gsap.to(".menu-item", { opacity: 0, y: -50, duration: 1.3 });
+      gsap.to(".submenu-item", { opacity: 0, y: -12, duration: 1.3 });
       setOpenSubmenu(null);
     }
   }, [menuOpen]);
@@ -76,8 +76,8 @@ export default function NavMenu({ menuOpen, setMenuOpen }) {
   return (
     <>
       {menuOpen && (
-        <div className="fixed inset-0 z-30 bg-black/90 flex items-center justify-start">
-          <ul className="menu-items text-white text-5xl md:text-7xl sm:text-5xl font-heading pl-8 space-y-8 w-full max-w-[720px]">
+        <div className="fixed inset-0 z-30 backdrop-blur-xl bg-black/70 flex items-center justify-start">
+          <ul className="menu-items text-white text-5xl md:text-7xl sm:text-5xl font-heading tracking-tighter pl-8 space-y-8 w-full max-w-[720px]">
             {MENU.map((item) => {
               const hasSub = Array.isArray(item.submenu);
               const isOpen = openSubmenu === item.name;
@@ -89,7 +89,7 @@ export default function NavMenu({ menuOpen, setMenuOpen }) {
                     <a
                       href={item.link}
                       onClick={() => setMenuOpen(false)}
-                      className="transition-all duration-300 transform hover:opacity-30 md:hover:text-8xl "
+                      className="transition-all duration-300 transform hover:opacity-30 md:hover:text-[5.2rem] "
                     >
                       {item.name}
                     </a>
@@ -140,7 +140,7 @@ export default function NavMenu({ menuOpen, setMenuOpen }) {
                           <a
                             href={sub.link}
                             onClick={() => setMenuOpen(false)}
-                            className="block transition-all duration-300 transform hover:opacity-40 font-heading uppercase hover:text-4xl "
+                            className="block transition-all duration-300 transform hover:opacity-40 font-heading tracking-tighter uppercase hover:text-4xl "
                           >
                             {sub.name}
                           </a>

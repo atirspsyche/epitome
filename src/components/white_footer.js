@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 
 export default function WhiteFooter() {
   return (
-    <footer className="w-full py-16 pb-8 px-8 text-secondary font-heading bg-primary z-40">
+    <footer className="w-full py-16 pb-8 px-8 text-secondary font-heading tracking-tighter bg-primary z-40">
       <div className="grid grid-cols-2 w-full gap-y-8 ">
         {/* Row 1–4: Left and Right aligned links */}
         <a

@@ -141,7 +141,7 @@ export default function AboutPage() {
         id="custom-cursor"
         className="z-50 pointer-events-none fixed top-0 left-0 w-4 h-4 bg-gray-500 rounded-full border-2 border-gray-300/50 transform -translate-x-1/2 -translate-y-1/2 transition-transform duration-100 ease-out"
       />
-      <header className="fixed inset-x-0 top-0 z-40 h-20 overflow-hidden  bg-[#111111] transition-colors duration-300">
+      <header className="fixed inset-x-0 top-0 z-40 h-20 overflow-hidden  transition-colors duration-300">
         {/* Background video inside header (fills the 80px / h-20 height) */}
         <video
           className="absolute inset-0 w-full h-full object-cover opacity-0"
@@ -195,13 +195,13 @@ export default function AboutPage() {
       </header>
       <NavMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
 
-      <section className="w-full h-[50vh] relative bg-[#111111]">
-        <div className="absolute w-full text-5xl md:text-7xl text-left font-heading bottom-0 left-1/2 px-8 transform -translate-x-1/2 text-white pb-10">
+      <section className="w-full h-[25vh] relative bg-[#111111]">
+        <div className="absolute w-full text-5xl md:text-6xl text-left font-heading tracking-tighter bottom-0 left-1/2 px-8 transform -translate-x-1/2 text-white pb-10">
           WE CREATE CONTENT THAT CAPTIVATES AND CONNECTS.
         </div>
       </section>
 
-      <div className="h-screen z-0 relative" />
+      <div className="h-[60vh] z-0 relative" />
       <video
         className="fixed inset-0 w-full h-full object-cover -z-10"
         src="/videos/v3.mp4"
@@ -216,10 +216,10 @@ export default function AboutPage() {
       >
         {/* Centered logo */}
       </div>
-      <div className="h-auto pt-20 bg-[#111111]">
-        <section className="w-full bg-secondary grid grid-cols-2 gap-32 text-white py-10 px-8">
+      <div className="h-auto pt-4 bg-[#111111]">
+        <section className="w-full bg-secondary grid grid-cols-2 gap-32 text-white py-10 px-8 pb-16">
           <div>
-            <h2 className="text-5xl uppercase font-heading">
+            <h2 className="text-5xl uppercase font-heading tracking-tighter">
               We collaborate with brands, businesses & agencies to create
               stellar content.
             </h2>
@@ -248,12 +248,12 @@ export default function AboutPage() {
           <div className="absolute inset-x-0 top-1/2 h-0.5 bg-gradient-to-r from-transparent via-lightNeutral to-transparent" />
         </div>
         <section className="w-full py-10 grid grid-row-2 gap-2 md:gap-10 text-white px-8">
-          <div className=" text-5xl flex justify-center items-center font-heading">
+          <div className=" text-5xl flex justify-center items-center font-heading tracking-tighter pb-5">
             HOW WE CAN HELP
           </div>
           <div className="grid md:grid-cols-3 gap-6 justify-center items-center text-center">
             <div>
-              <div className="font-heading text-2xl pb-5 uppercase">
+              <div className="font-heading tracking-tighter text-3xl pb-7 uppercase">
                 Delivery
               </div>
               <div className=" text-xs">
@@ -275,7 +275,7 @@ export default function AboutPage() {
               </div>
             </div>
             <div>
-              <div className="font-heading text-2xl pb-5 uppercase">
+              <div className="font-heading tracking-tighter text-3xl pb-7 uppercase">
                 Creative
               </div>
               <div className=" text-xs">
@@ -298,7 +298,7 @@ export default function AboutPage() {
               </div>
             </div>
             <div>
-              <div className="font-heading text-2xl pb-5 uppercase">
+              <div className="font-heading tracking-tighter text-3xl pb-7 uppercase">
                 Production
               </div>
               <div className=" text-xs">
@@ -361,24 +361,26 @@ export default function AboutPage() {
             </div>
           </div> */}
           <div class="gap-1 bg-secondary">
-            <div class="place-items-center grid bg-secondary p-1 rounded shadow py-16">
+            <div class="place-items-center grid bg-secondary p-1 rounded shadow pb-16 pt-10">
               <div class="text-center">
                 <h2 class="text-5xl font-semibold">WHAT MAKES US</h2>
               </div>
-              <div class="text-center pt-3">
-                <img src="/images/logo_combination.png" className="w-48"></img>
+              <div class="text-center pt-14 w-60">
+                <img src="/images/logo_type_w.png"></img>
               </div>
-              <div class="text-center pt-7">
+              {/* <div class="text-center pt-7">
                 <h2 class="text-sm font-normal uppercase">
                   THESE 3 CORE PILLARS DEFINE OUR CREATIVE APPROACH:
                 </h2>
-              </div>
+              </div> */}
             </div>
           </div>
-          <div class="grid grid-cols-3 gap-6 items-center justify-items-start min-h-[200px] bg-secondary-50 p-6 pb-16">
+          <div class="grid grid-cols-3 gap-6 items-center justify-items-start min-h-[200px] bg-secondary-50 p-6 pt-4 pb-16">
             <div class="bg-secondary p-4 rounded shadow w-full">
-              <h3 class="text-2xl font-heading">1.</h3>
-              <p class="text-2xl text-left font-heading pt-1">Strategy Led</p>
+              <h3 class="text-2xl font-heading tracking-tighter">01</h3>
+              <p class="text-2xl text-left font-heading tracking-tighter pt-1">
+                Strategy Led
+              </p>
               <p class="text-sm text-left pt-1">
                 Every project starts with purpose. We align creative with your
                 brand goals, audience, and message.
@@ -386,8 +388,8 @@ export default function AboutPage() {
             </div>
 
             <div class="bg-secondary p-4 rounded shadow w-full">
-              <h3 class="text-2xl font-heading">2.</h3>
-              <p class="text-2xl text-left font-heading  pt-1">
+              <h3 class="text-2xl font-heading tracking-tighter">02</h3>
+              <p class="text-2xl text-left font-heading tracking-tighter  pt-1">
                 Cinematically Crafted
               </p>
               <p class="text-sm text-left pt-1">
@@ -397,8 +399,10 @@ export default function AboutPage() {
             </div>
 
             <div class="bg-secondary p-4 rounded shadow w-full">
-              <h3 class="text-2xl font-heading">3.</h3>
-              <p class="text-2xl text-left font-heading pt-1">Results Driven</p>
+              <h3 class="text-2xl font-heading tracking-tighter">03</h3>
+              <p class="text-2xl text-left font-heading tracking-tighter pt-1">
+                Results Driven
+              </p>
               <p class="text-sm text-left pt-1">
                 We measure success by the clarity, connection, and impact our
                 content delivers.
@@ -411,7 +415,9 @@ export default function AboutPage() {
           <div class="gap-1 bg-secondary">
             <div class="place-items-center grid bg-secondary p-1 rounded shadow py-16">
               <div class="text-center">
-                <h2 class="text-5xl font-heading uppercase">Noble Awards</h2>
+                <h2 class="text-5xl font-heading tracking-tighter uppercase">
+                  Noble Awards
+                </h2>
               </div>
             </div>
           </div>

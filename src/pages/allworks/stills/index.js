@@ -139,7 +139,7 @@ function AllWork() {
         playsInline
       />
       <div className="fixed inset-10 z-10 flex justify-start items-end">
-        <ul className="text-white text-2xl md:text-5xl font-heading font-semibold ">
+        <ul className="text-white text-2xl md:text-5xl font-heading tracking-tighter">
           <li className="mb-10 text-6xl">Stills</li>
 
           {brandList.map((el, i) => (

@@ -19,8 +19,8 @@ export default function BrandShowcase({ brand }) {
           src={`/images/${item.url}`}
           className={
             fullCover
-              ? "inset-0 w-full h-full object-cover"
-              : "w-full h-auto object-cover"
+              ? "inset-0 w-full h-full object-cover rounded-xl"
+              : "w-full h-auto object-cover rounded-xl"
           }
           alt={brand.brand_name + " media " + key}
           loading="lazy"
@@ -31,7 +31,7 @@ export default function BrandShowcase({ brand }) {
       <video
         key={key}
         src={`/videos/${item.url}`}
-        className="w-full h-auto object-cover feat-video"
+        className="w-full h-auto object-cover feat-video rounded-xl"
         data-lazy="true"
         muted
         loop
@@ -89,44 +89,44 @@ export default function BrandShowcase({ brand }) {
         className="z-10 relative text-primary px-8 py-14 w-fit"
         style={{ height: "90vh", top: "65vh" }}
       >
-        <div className="font-heading backdrop-blur-xl bg-black/40  rounded-2xl p-8 shadow-2xl ">
-          <div className="uppercase font-heading text-5xl md:text-8xl leading-tight text-left text-primary">
+        <div className="font-heading tracking-tighter backdrop-blur-xl bg-white/5  rounded-2xl p-8 shadow-2xl ">
+          <div className="uppercase font-heading tracking-tighter text-5xl md:text-8xl leading-tight text-left text-primary">
             {brand.brand_name}
           </div>
           {brand.subtitle && (
-            <div className="text-2xl md:text-4xl font-semibold text-primary pt-4">
+            <div className="text-2xl md:text-4xl text-primary pt-4">
               {brand.subtitle}
             </div>
           )}
           {brand.pagination_text && (
-            <div className="font-semibold text-primary pt-3">
-              {brand.pagination_text}
-            </div>
+            <div className=" text-primary pt-3">{brand.pagination_text}</div>
           )}
         </div>
       </div>
       <div className="h-[10vh] -z-10 relative" />
 
       {/* About & Credits */}
-      <div className="relative grid md:grid-cols-2 bg-primary z-10 px-20 py-10 gap-10">
+      <div className="relative grid md:grid-cols-2 bg-neutral-900 z-10 px-16 py-10 gap-10">
         <div>
-          <div className="font-heading text-3xl uppercase leading-tight text-hanBlue">
+          <div className="font-heading tracking-tighter text-3xl uppercase leading-tight text-neutral-300 font-bold">
             About Project
           </div>
+          <div className="w-full h-0.5 bg-gradient-to-r from-hanBlue to-secondary my-4" />
           {brand.about && (
-            <div className="py-4 md:w-3/4 text-sm text-secondary whitespace-pre-line">
+            <div className="py-4 md:w-3/4 text-sm text-primary whitespace-pre-line">
               {brand.about}
             </div>
           )}
         </div>
         <div>
-          <div className="font-heading text-3xl uppercase font-semibold leading-tight text-hanBlue">
+          <div className="font-heading tracking-tighter text-3xl uppercase font-semibold leading-tight text-neutral-300">
             Credits
           </div>
+          <div className="w-full h-0.5 bg-gradient-to-r from-hanBlue to-secondary my-4" />
           <div className="py-4 space-y-2">
             {Array.isArray(brand.credits) &&
               brand.credits.map((el, i) => (
-                <div key={i} className="text-sm text-secondary">
+                <div key={i} className="text-sm text-primary">
                   <b>{el.title}</b>: {el.description}
                 </div>
               ))}
@@ -135,27 +135,27 @@ export default function BrandShowcase({ brand }) {
       </div>
 
       {/* Gallery Pattern */}
-      <div className="bg-primary relative grid md:grid-cols-2 gap-10">
+      <div className="bg-secondary relative grid md:grid-cols-2 gap-10 px-10 ">
         <div className="md:col-span-2 object-cover relative min-h-[50vh]">
           {renderMedia(safeItem(0), 0, true)}
         </div>
       </div>
-      <div className="bg-primary relative grid md:grid-cols-2 gap-10 p-10">
+      <div className="bg-secondary relative grid md:grid-cols-2 gap-10 p-10">
         {[safeItem(1), safeItem(2)].map((m, i) => (
           <div key={i}>{renderMedia(m, i + 1)}</div>
         ))}
       </div>
-      <div className="bg-primary relative grid md:grid-cols-2 gap-10">
+      <div className="bg-secondary relative grid md:grid-cols-2 gap-10 px-10">
         <div className="md:col-span-2 relative min-h-[50vh]">
           {renderMedia(safeItem(3), 3, true)}
         </div>
       </div>
-      <div className="bg-primary relative grid md:grid-cols-2 gap-10 p-10">
+      <div className="bg-secondary relative grid md:grid-cols-2 gap-10 p-10">
         {[safeItem(4), safeItem(5)].map((m, i) => (
           <div key={i}>{renderMedia(m, i + 4)}</div>
         ))}
       </div>
-      <div className="bg-primary relative grid md:grid-cols-2 gap-10">
+      <div className="bg-secondary relative grid md:grid-cols-2 gap-10 px-10 pb-10">
         <div className="md:col-span-2 relative min-h-[50vh]">
           {renderMedia(safeItem(6), 6, true)}
         </div>

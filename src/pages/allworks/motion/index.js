@@ -139,7 +139,7 @@ function AllWork() {
         playsInline
       />
       <div className="fixed inset-10 z-10 flex justify-start items-end">
-        <div className="text-white text-2xl md:text-5xl font-heading font-semibold">
+        <div className="text-white text-2xl md:text-5xl font-heading tracking-tighter ">
           <div className="mb-10 text-6xl">Motion</div>
 
           <div className="flex gap-16">

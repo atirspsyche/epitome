@@ -12,6 +12,7 @@ module.exports = {
         // Secondary/body font: same stack (so everything uses Helvetica)
         body: ["Inter", "Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
         sans: ["Inter"],
+        serif: ["Formom"],
       },
       colors: {
         primary: "#FCF6F5",
