@@ -3,6 +3,19 @@ import gsap from "gsap";
 
 export default function NavMenu({ menuOpen, setMenuOpen }) {
   const [openSubmenu, setOpenSubmenu] = useState(null); // for mobile/tap toggle
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if mobile on mount and window resize
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const MENU = [
     { name: "HOME", link: "/" },
@@ -81,8 +94,8 @@ export default function NavMenu({ menuOpen, setMenuOpen }) {
                       {item.name}
                     </a>
 
-                    {/* arrow / toggle only if submenu exists */}
-                    {hasSub && (
+                    {/* arrow / toggle only if submenu exists and not on mobile */}
+                    {hasSub && !isMobile && (
                       // button so clicks don't navigate away
                       <button
                         onClick={(e) => {
@@ -111,10 +124,12 @@ export default function NavMenu({ menuOpen, setMenuOpen }) {
                       id={`${item.name}-submenu`}
                       // Keep this in-flow (not absolute). Use max-h trick to animate height.
                       className={`pl-10 mt-4 overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out ${
-                        // show on hover (desktop) OR when toggled open (mobile)
-                        `max-h-0 opacity-0 group-hover:max-h-[300px] group-hover:opacity-100 ${
-                          isOpen ? "max-h-[300px] opacity-100" : ""
-                        }`
+                        // On mobile: always show submenus, on desktop: show on hover OR when toggled open
+                        isMobile
+                          ? "max-h-[300px] opacity-100"
+                          : `max-h-0 opacity-0 group-hover:max-h-[300px] group-hover:opacity-100 ${
+                              isOpen ? "max-h-[300px] opacity-100" : ""
+                            }`
                       }`}
                     >
                       {item.submenu.map((sub) => (

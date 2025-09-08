@@ -75,6 +75,11 @@ const MainLanding = () => {
     // Clear all existing ScrollTriggers first
     ScrollTrigger.getAll().forEach((st) => st.kill());
 
+    // Ensure overlay starts in correct position
+    if (overlayRef.current) {
+      gsap.set(overlayRef.current, { yPercent: 0 });
+    }
+
     // Throttled overlay animation
     let overlayTween = gsap.to(overlayRef.current, {
       yPercent: -100,
@@ -84,6 +89,13 @@ const MainLanding = () => {
         start: "top top",
         end: "bottom top",
         scrub: 1, // Reduced scrub for smoother performance
+        invalidateOnRefresh: true, // Reset on page refresh
+        onRefresh: () => {
+          // Reset overlay position on refresh
+          if (overlayRef.current) {
+            gsap.set(overlayRef.current, { yPercent: 0 });
+          }
+        },
         onUpdate: (self) => {
           // Throttle expensive operations
           if (self.progress > 0.95 && bgVidRef.current) {
@@ -136,18 +148,38 @@ const MainLanding = () => {
     if (window.innerWidth < 768) {
       // Use requestAnimationFrame for better mobile performance
       requestAnimationFrame(() => {
+        // Animate mobile featured video containers (not the videos themselves)
+        gsap.utils
+          .toArray(".block.md\\:hidden .space-y-8 > a")
+          .forEach((el, index) => {
+            gsap.from(el, {
+              y: 50,
+              opacity: 0,
+              duration: 0.4,
+              ease: "power2.out",
+              delay: index * 0.1,
+              scrollTrigger: {
+                trigger: el,
+                start: "top 90%",
+                toggleActions: "play none none none",
+                once: true,
+              },
+            });
+          });
+
+        // Target other mobile videos (other works section only)
         gsap.utils.toArray(".mobile-video").forEach((el, index) => {
           gsap.from(el, {
             y: 50,
             opacity: 0,
-            duration: 0.4, // Reduced duration for better performance
+            duration: 0.4,
             ease: "power2.out",
-            delay: index * 0.1, // Stagger the animations
+            delay: index * 0.1,
             scrollTrigger: {
               trigger: el,
               start: "top 90%",
               toggleActions: "play none none none",
-              once: true, // Only animate once for better performance
+              once: true,
             },
           });
         });
@@ -159,12 +191,32 @@ const MainLanding = () => {
     const cursor = document.getElementById("custom-cursor");
     if (!cursor) return;
 
+    // Only show custom cursor on desktop (768px and above)
+    const isMobile = window.innerWidth < 768;
+
+    if (isMobile) {
+      cursor.style.display = "none";
+      return;
+    }
+
+    cursor.style.display = "block";
+
     const move = (e) => {
       cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
     };
 
+    const handleResize = () => {
+      const isMobileResize = window.innerWidth < 768;
+      cursor.style.display = isMobileResize ? "none" : "block";
+    };
+
     window.addEventListener("mousemove", move);
-    return () => window.removeEventListener("mousemove", move);
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("mousemove", move);
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   // useEffect(() => {
@@ -280,10 +332,17 @@ const MainLanding = () => {
     }
   }, [menuOpen]);
 
+  // Initialize scroll position and overlay state
   useEffect(() => {
+    // Reset scroll position
     window.scrollTo(0, 0);
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
+
+    // Ensure overlay starts in correct position on page load/reload
+    if (overlayRef.current) {
+      gsap.set(overlayRef.current, { yPercent: 0, clearProps: "transform" });
+    }
 
     if (showSplash && splashRef.current) {
       document.body.style.overflow = "hidden";
@@ -343,20 +402,19 @@ const MainLanding = () => {
         id="custom-cursor"
         className="z-50 pointer-events-none fixed top-0 left-0 w-4 h-4 bg-gray-500 rounded-full border-2 border-gray-300/50 transform -translate-x-1/2 -translate-y-1/2 transition-transform duration-100 ease-out"
       />
-
       {showSplash && (
         <div
           ref={splashRef}
           className="fixed inset-0 z-50 bg-white flex items-center justify-center"
         >
           <video
-            src="/videos/epi.mp4"
-            className="w-1/3"
+            src="/videos/epi_trimmed.mp4"
+            className="md:w-1/3 sm:w-2/3"
             autoPlay
             muted
             playsInline
             preload="metadata"
-            poster="/images/epi1.png"
+            // poster="/images/epi1.png"
           />
         </div>
       )}
@@ -370,7 +428,7 @@ const MainLanding = () => {
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="none"
         />
 
         <div
@@ -416,7 +474,7 @@ const MainLanding = () => {
             el.muted = true;
             el.loop = true;
             el.playsInline = true;
-            // Only start playing after splash is done
+            // Start playing when component is ready
             if (!showSplash) {
               el.play().catch(console.log);
             }
@@ -512,16 +570,16 @@ const MainLanding = () => {
                   className="relative block rounded-3xl overflow-hidden h-64"
                 >
                   <video
-                    data-src={item.src}
-                    className="w-full h-full object-cover mobile-video"
-                    data-lazy="true"
+                    src={item.src}
+                    className="feat-video w-full h-full object-cover"
                     muted
                     loop
                     playsInline
-                    preload="none"
+                    preload="metadata"
+                    autoPlay
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                  <div className="absolute bottom-4 left-4 px-3 py-1 rounded-full bg-black/50 text-white text-sm">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                  <div className="absolute bottom-4 left-4 z-10 px-3 py-1 rounded-full bg-black/70 backdrop-blur-sm text-white text-sm font-medium">
                     {item.title}
                   </div>
                 </a>

@@ -25,12 +25,32 @@ function AllWork() {
     const cursor = document.getElementById("custom-cursor");
     if (!cursor) return;
 
+    // Only show custom cursor on desktop (768px and above)
+    const isMobile = window.innerWidth < 768;
+
+    if (isMobile) {
+      cursor.style.display = "none";
+      return;
+    }
+
+    cursor.style.display = "block";
+
     const move = (e) => {
       cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
     };
 
+    const handleResize = () => {
+      const isMobileResize = window.innerWidth < 768;
+      cursor.style.display = isMobileResize ? "none" : "block";
+    };
+
     window.addEventListener("mousemove", move);
-    return () => window.removeEventListener("mousemove", move);
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("mousemove", move);
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
   // useEffect(() => {
   //   if (menuOpen) {
