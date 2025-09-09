@@ -18,11 +18,22 @@
     "@heroicons/react": "^2.2.0",
     "autoprefixer": "^10.4.21",
     "gatsby": "^5.14.1",
+    "gatsby-plugin-image": "^3.15.0",
+    "gatsby-plugin-manifest": "^5.15.0",
     "gatsby-plugin-postcss": "^6.14.0",
+    "gatsby-plugin-preload-fonts": "^4.15.0",
+    "gatsby-plugin-sharp": "^5.15.0",
+    "gatsby-transformer-ffmpeg": "^0.5.5",
+    "gatsby-transformer-sharp": "^5.15.0",
     "gsap": "^3.13.0",
     "postcss": "^8.5.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "tailwindcss": "^3.4.17"
+    "react-player": "^3.3.2",
+    "tailwindcss": "^3.4.17",
+    "vimeo": "^2.3.1"
+  },
+  "devDependencies": {
+    "gatsby-plugin-webpack-bundle-analyser-v2": "^1.1.32"
   }
 }

@@ -1,3 +1,141 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* @font-face {
+  font-family: "Inter";
+  src: url("/fonts/inter/Inter-Medium.otf");
+  font-style:  normal;
+  font-display: swap;
+} */
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/inter/Inter-Regular.otf");
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Formom";
+  src: url("/fonts/formom/formom.otf");
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/satoshi/Satoshi-Bold.otf");
+  font-style: normal;
+  font-display: swap;
+  /* font-weight: 400; */
+}
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/satoshi/Satoshi-Black.otf");
+  font-style: normal;
+  font-display: swap;
+  font-weight: bold;
+}
+
+/* hide on small screens */
+@media (max-width: 640px) {
+  html,
+  body {
+    background-image: none;
+  }
+}
+body,
+a,
+button {
+  cursor: none;
+}
+
+video {
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+  /* Performance optimizations */
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Optimize video rendering */
+video[data-lazy] {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+video[data-lazy].playing {
+  opacity: 1;
+}
+
+.react-player video {
+  object-fit: cover !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Force Vimeo iframe to fill container */
+.react-player iframe {
+  object-fit: cover !important;
+  width: 100% !important;
+  height: 100% !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) scale(1.5) !important;
+  min-width: 100% !important;
+  min-height: 100% !important;
+}
+
+/* Container for react-player to ensure proper scaling */
+.react-player {
+  position: absolute !important;
+  overflow: hidden !important;
+}
+
+/* Alternative approach - crop to fit */
+.react-player-crop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.react-player-crop iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100vw;
+  height: 56.25vw; /* 16:9 aspect ratio */
+  min-height: 100vh;
+  min-width: 177.78vh; /* 16:9 aspect ratio */
+  transform: translate(-50%, -50%);
+}
+
+/* put in src/styles/global.css or tailwind layer */
+.reveal,
+.reveal-back {
+  display: block;
+  overflow: hidden;
+  line-height: 0.85;
+}
+.reveal .text,
+.reveal-back .text {
+  display: inline-block;
+  will-change: transform, opacity;
+  transform-origin: 50% 50%;
+}
+/* back layer visual tweak */
+.reveal-back {
+  transform: translateY(8px) translateX(-6px);
+  pointer-events: none;
+}
+.reveal-back .text {
+  opacity: 0.18;
+}
+.menu-items .menu-item {
+  position: relative;
+}
