@@ -142,7 +142,7 @@ function AllWork() {
       <NavMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
       <video
         className="fixed inset-0 w-full h-full object-cover -z-10"
-        src="/videos/v1.mp4"
+        src="/videos/bg/home.mp4"
         autoPlay
         muted
         loop

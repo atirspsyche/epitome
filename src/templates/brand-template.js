@@ -34,25 +34,6 @@ export default function BrandPage({ pageContext }) {
     return () => videos.forEach((v) => observer.unobserve(v));
   }, []);
 
-  // Menu animation
-  useEffect(() => {
-    if (menuOpen) {
-      gsap.fromTo(
-        ".menu-item",
-        { y: -50, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          ease: "back.out(1.7)",
-          duration: 0.5,
-          stagger: 0.15,
-        }
-      );
-    } else {
-      gsap.to(".menu-item", { opacity: 0, y: -50, duration: 0.2 });
-    }
-  }, [menuOpen]);
-
   // Custom cursor
   useEffect(() => {
     const cursor = document.getElementById("custom-cursor");

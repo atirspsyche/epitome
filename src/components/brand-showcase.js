@@ -57,7 +57,7 @@ export default function BrandShowcase({ brand }) {
             vimeo: {
               playerOptions: {
                 background: true,
-                controls: false,
+                controls: true,
                 title: false,
                 byline: false,
                 portrait: false,
@@ -79,7 +79,7 @@ export default function BrandShowcase({ brand }) {
             minHeight: "100%",
           }}
           className="react-player-crop"
-          controls={false}
+          controls={true}
         />
       </div>
 

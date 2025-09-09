@@ -483,7 +483,7 @@ const MainLanding = () => {
         {/* ---------- FEATURED (with overlays, hover, click) ---------- */}
         <section id="featured-wrapper" className="w-screen bg-secondary">
           <div className="w-full pt-12 px-8">
-            <h2 className="font-heading tracking-tighter text-[2rem] sm:text-[2rem] lg:text-[5rem] leading-tight text-primary text-left uppercase font-normal tracking-tighter">
+            <h2 className="font-heading tracking-tighter text-[2rem] sm:text-[2rem] lg:text-[5rem] leading-tight text-primary text-left uppercase font-normal ">
               Epitome is a results-driven creative production company
             </h2>
           </div>
@@ -577,7 +577,7 @@ const MainLanding = () => {
             <div className="relative overflow-hidden md:col-span-6 h-4/5 mt-40">
               <div className="absolute w-full inset-0">
                 <a
-                  href="/work/akshat"
+                  href="/work/motion/BPFT2025"
                   className="feat-card group absolute inset-0 z-10 rounded-3xl block"
                   style={{ transform: "translateX(0%)" }}
                 >
@@ -603,7 +603,7 @@ const MainLanding = () => {
                   {/* hover center reveal */}
                   <div className="absolute inset-0 z-20 flex items-center justify-center px-4">
                     <div className="transform translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out text-center pointer-events-none">
-                      <h4 className="text-white text-4xl font-heading tracking-tighter uppercase tracking-wide drop-shadow-[0_6px_20px_rgba(0,0,0,0.7)]">
+                      <h4 className="text-white text-4xl font-heading tracking-tighter uppercase drop-shadow-[0_6px_20px_rgba(0,0,0,0.7)]">
                         BPFT 2025
                       </h4>
                       <div className="mt-2 opacity-80 text-sm text-white">
@@ -635,7 +635,7 @@ const MainLanding = () => {
                   </div>
                   <div className="absolute inset-0 z-20 flex items-center justify-center px-4">
                     <div className="transform translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out text-center pointer-events-none">
-                      <h4 className="text-white text-4xl font-heading tracking-tighter uppercase tracking-wide drop-shadow-[0_6px_20px_rgba(0,0,0,0.7)]">
+                      <h4 className="text-white text-4xl font-heading tracking-tighter uppercase drop-shadow-[0_6px_20px_rgba(0,0,0,0.7)]">
                         Oaken Glow
                       </h4>
                       <div className="mt-2 opacity-80 text-sm text-white">
@@ -764,6 +764,39 @@ const MainLanding = () => {
             <figure className="group relative rounded-xl overflow-hidden md:col-span-6 md:row-span-2">
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                data-src={`/videos/other_work/06.mp4`}
+                data-lazy="true"
+                loop
+                muted
+                playsInline
+                preload="none"
+              />
+              <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+              <figcaption className="absolute top-4 left-4 z-20">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/50 backdrop-blur-sm text-white text-sm font-medium">
+                  Blender Pride
+                </div>
+              </figcaption>
+
+              <a href="work/motion/VivoLockdown">
+                <div className="absolute inset-0 z-10 flex items-center justify-center px-4">
+                  <div className="transform translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out text-center pointer-events-none">
+                    <h4 className="text-white text-2xl sm:text-3xl font-heading tracking-tighter uppercase  drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)]">
+                      Blender Pride
+                    </h4>
+                    <div className="mt-2 opacity-80 text-xs text-white">
+                      Commercial
+                    </div>
+                  </div>
+                </div>
+              </a>
+
+              <span className="sr-only">Video: Blender Pride</span>
+            </figure>
+            <figure className="group relative rounded-xl overflow-hidden md:col-span-3 md:row-span-1">
+              <video
+                className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                 data-src={`/videos/other_work/04.mp4`}
                 data-lazy="true"
                 loop
@@ -802,39 +835,6 @@ const MainLanding = () => {
               <span className="sr-only">Video: Vivo</span>
             </figure>
 
-            <figure className="group relative rounded-xl overflow-hidden md:col-span-3 md:row-span-1">
-              <video
-                className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                data-src={`/videos/other_work/06.mp4`}
-                data-lazy="true"
-                loop
-                muted
-                playsInline
-                preload="none"
-              />
-              <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-
-              <figcaption className="absolute top-4 left-4 z-20">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/50 backdrop-blur-sm text-white text-sm font-medium">
-                  Blender Pride
-                </div>
-              </figcaption>
-
-              <a href="work/motion/VivoLockdown">
-                <div className="absolute inset-0 z-10 flex items-center justify-center px-4">
-                  <div className="transform translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out text-center pointer-events-none">
-                    <h4 className="text-white text-2xl sm:text-3xl font-heading tracking-tighter uppercase  drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)]">
-                      Blender Pride
-                    </h4>
-                    <div className="mt-2 opacity-80 text-xs text-white">
-                      Commercial
-                    </div>
-                  </div>
-                </div>
-              </a>
-
-              <span className="sr-only">Video: Blender Pride</span>
-            </figure>
             <figure className="group relative rounded-xl overflow-hidden md:col-span-3 md:row-span-1">
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
@@ -891,7 +891,7 @@ const MainLanding = () => {
               <a href="work/motion/SocietyTea">
                 <div className="absolute inset-0 z-10 flex items-center justify-center px-4">
                   <div className="transform translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out text-center pointer-events-none">
-                    <h4 className="text-white text-3xl sm:text-4xl font-heading tracking-tighter uppercase tracking-wide drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)]">
+                    <h4 className="text-white text-3xl sm:text-4xl font-heading tracking-tighter uppercase drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)]">
                       Society Tea
                     </h4>
                     <div className="mt-2 opacity-80 text-xs text-white">
@@ -925,7 +925,7 @@ const MainLanding = () => {
               <a href="work/motion/TataPunch">
                 <div className="absolute inset-0 z-10 flex items-center justify-center px-4">
                   <div className="transform translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out text-center pointer-events-none">
-                    <h4 className="text-white text-2xl sm:text-3xl font-heading tracking-tighter uppercase tracking-wide drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)]">
+                    <h4 className="text-white text-2xl sm:text-3xl font-heading tracking-tighter uppercase drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)]">
                       Tata Punch
                     </h4>
                     <div className="mt-2 opacity-80 text-xs text-white">
@@ -1026,7 +1026,7 @@ const MainLanding = () => {
               <a href="work/motion/SuzukiBaleno">
                 <div className="absolute inset-0 z-10 flex items-center justify-center px-4">
                   <div className="transform translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out text-center pointer-events-none">
-                    <h4 className="text-white text-2xl sm:text-3xl font-heading tracking-tighter uppercase tracking-wide drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)]">
+                    <h4 className="text-white text-2xl sm:text-3xl font-heading tracking-tighter uppercase drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)]">
                       Oaken Glow
                     </h4>
                     <div className="mt-2 opacity-80 text-xs text-white">
