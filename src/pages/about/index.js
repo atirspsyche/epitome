@@ -17,13 +17,8 @@ const allImages = [...images, ...images, ...images, ...images, ...images];
 export default function AboutPage() {
   const bgVidRef = useRef(null);
   const overlayRef = useRef(null);
-  const galleryRef = useRef(null);
-  const galleryInnerRef = useRef(null);
-  const featuredRef = useRef(null);
-  const videosInnerRef = useRef(null);
+
   const [menuOpen, setMenuOpen] = useState(false);
-  const [showSplash, setShowSplash] = useState(true);
-  const splashRef = useRef(null);
 
   const containerRef = useRef(null);
   const tlRef = useRef(null);
@@ -204,7 +199,7 @@ export default function AboutPage() {
       <div className="h-[60vh] z-0 relative" />
       <video
         className="fixed inset-0 w-full h-full object-cover -z-10"
-        src="/videos/v3.mp4"
+        src="/videos/bg/home.mp4"
         autoPlay
         muted
         loop
