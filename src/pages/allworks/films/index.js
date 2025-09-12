@@ -132,7 +132,7 @@ function AllWork() {
       <NavMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
       <video
         className="fixed inset-0 w-full h-full object-cover -z-10"
-        src="/videos/bg/home.mp4"
+        src="https://res.cloudinary.com/deg1fqn2b/video/upload/v1757687262/BP_KANIKA_13SEC_kozr9v.mp4"
         autoPlay
         muted
         loop

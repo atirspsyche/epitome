@@ -18,6 +18,32 @@ video.playing {
   backface-visibility: hidden;
 }
 
+/* CSS fallback for overlay logo animation */
+@keyframes overlayFadeUp {
+  0% {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+.overlay-logo {
+  animation-fill-mode: forwards;
+  transform: translateY(0%);
+}
+
+/* CSS-based scroll-driven animation as fallback */
+@supports (animation-timeline: scroll()) {
+  .overlay-logo-css-fallback {
+    animation: overlayFadeUp linear forwards;
+    animation-timeline: scroll();
+    animation-range: 0vh 100vh;
+  }
+}
+
 /* Smooth scrolling optimizations */
 html {
   scroll-behavior: smooth;

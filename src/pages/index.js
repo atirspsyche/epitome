@@ -75,72 +75,93 @@ const MainLanding = () => {
     // Clear all existing ScrollTriggers first
     ScrollTrigger.getAll().forEach((st) => st.kill());
 
-    // Ensure overlay starts in correct position
-    if (overlayRef.current) {
-      gsap.set(overlayRef.current, { yPercent: 0 });
-    }
+    // Ensure we're at the top before setting up ScrollTrigger
+    window.scrollTo(0, 0);
 
-    // Throttled overlay animation
-    let overlayTween = gsap.to(overlayRef.current, {
-      yPercent: -100,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: overlayRef.current,
-        start: "top top",
-        end: "bottom top",
-        scrub: 1, // Reduced scrub for smoother performance
-        invalidateOnRefresh: true, // Reset on page refresh
-        onRefresh: () => {
-          // Reset overlay position on refresh
-          if (overlayRef.current) {
-            gsap.set(overlayRef.current, { yPercent: 0 });
-          }
-        },
-        onUpdate: (self) => {
-          // Throttle expensive operations
-          if (self.progress > 0.95 && bgVidRef.current) {
-            const opacity = Math.min(
-              Math.max((self.progress - 0.95) / 0.05, 0),
-              1
-            );
-            bgVidRef.current.style.opacity = opacity;
-          }
-        },
-      },
-    });
-
-    // Gallery horizontal scroll with performance optimization
-    const galleryEl = galleryRef.current;
-    const innerEl = galleryInnerRef.current;
-
-    let galleryTween;
-    if (galleryEl && innerEl) {
-      // Use requestAnimationFrame for smoother calculations
-      requestAnimationFrame(() => {
-        const totalScrollWidth =
-          innerEl.scrollWidth - window.innerWidth + 0.2 * innerEl.scrollWidth;
-
-        galleryTween = gsap.to(innerEl, {
-          x: -totalScrollWidth,
-          ease: "none",
-          scrollTrigger: {
-            trigger: galleryEl,
-            start: "top top",
-            end: () => `+=${innerEl.scrollWidth}`,
-            scrub: 1, // Reduced for performance
-            pin: true,
-            pinSpacing: false,
-            invalidateOnRefresh: true, // Better responsive behavior
-          },
+    // Wait for next frame to ensure scroll position is set
+    requestAnimationFrame(() => {
+      // Ensure overlay starts in correct position
+      if (overlayRef.current) {
+        gsap.set(overlayRef.current, {
+          yPercent: 0,
+          force3D: true,
         });
+      }
+
+      // Throttled overlay animation with better refresh handling
+      let overlayTween = gsap.to(overlayRef.current, {
+        yPercent: -100,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: overlayRef.current,
+          start: "top top", // Always start from the very top
+          end: "bottom top",
+          scrub: 1,
+          invalidateOnRefresh: true,
+          refreshPriority: 1, // High priority for refresh
+          onRefresh: (self) => {
+            // Only reset overlay position, don't force scroll to top during normal use
+            if (overlayRef.current) {
+              gsap.set(overlayRef.current, {
+                yPercent: 0,
+                clearProps: "transform",
+                force3D: true,
+              });
+            }
+          },
+          onUpdate: (self) => {
+            // Throttle expensive operations
+            if (self.progress > 0.95 && bgVidRef.current) {
+              const opacity = Math.min(
+                Math.max((self.progress - 0.95) / 0.05, 0),
+                1
+              );
+              bgVidRef.current.style.opacity = opacity;
+            }
+          },
+        },
       });
-    }
+
+      // Gallery horizontal scroll with performance optimization
+      const galleryEl = galleryRef.current;
+      const innerEl = galleryInnerRef.current;
+
+      let galleryTween;
+      if (galleryEl && innerEl) {
+        // Use requestAnimationFrame for smoother calculations
+        requestAnimationFrame(() => {
+          const totalScrollWidth =
+            innerEl.scrollWidth - window.innerWidth + 0.2 * innerEl.scrollWidth;
+
+          galleryTween = gsap.to(innerEl, {
+            x: -totalScrollWidth,
+            ease: "none",
+            scrollTrigger: {
+              trigger: galleryEl,
+              start: "top top",
+              end: () => `+=${innerEl.scrollWidth}`,
+              scrub: 1, // Reduced for performance
+              pin: true,
+              pinSpacing: false,
+              invalidateOnRefresh: true, // Better responsive behavior
+            },
+          });
+        });
+      }
+
+      // Store tweens for cleanup
+      window.epitomeTweens = { overlayTween, galleryTween };
+    });
 
     return () => {
       // Proper cleanup
       ScrollTrigger.getAll().forEach((st) => st.kill());
-      if (overlayTween) overlayTween.kill();
-      if (galleryTween) galleryTween.kill();
+      if (window.epitomeTweens) {
+        if (window.epitomeTweens.overlayTween)
+          window.epitomeTweens.overlayTween.kill();
+        if (window.epitomeTweens.galleryTween)
+          window.epitomeTweens.galleryTween.kill();
+      }
     };
   }, []);
 
@@ -314,17 +335,35 @@ const MainLanding = () => {
     };
   }, []); // runs after mount
 
-  // Initialize scroll position and overlay state
+  // Initialize scroll position and overlay state - MUST run first
   useEffect(() => {
-    // Reset scroll position
-    window.scrollTo(0, 0);
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
+    // Force scroll to top immediately and prevent any scroll restoration
+    const preventScrollRestoration = () => {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    };
 
-    // Ensure overlay starts in correct position on page load/reload
+    // Run immediately
+    preventScrollRestoration();
+
+    // Prevent browser scroll restoration
+    if (
+      typeof window !== "undefined" &&
+      "scrollRestoration" in window.history
+    ) {
+      window.history.scrollRestoration = "manual";
+    } // Ensure overlay starts in correct position on page load/reload
     if (overlayRef.current) {
-      gsap.set(overlayRef.current, { yPercent: 0, clearProps: "transform" });
+      gsap.set(overlayRef.current, {
+        yPercent: 0,
+        clearProps: "transform",
+        force3D: true,
+      });
     }
+
+    // Double-check scroll position after a brief delay
+    const scrollCheckTimeout = setTimeout(preventScrollRestoration, 100);
 
     if (showSplash && splashRef.current) {
       document.body.style.overflow = "hidden";
@@ -336,9 +375,15 @@ const MainLanding = () => {
         onComplete: () => {
           setShowSplash(false);
           document.body.style.overflow = "";
+          // Force scroll to top again after splash
+          setTimeout(preventScrollRestoration, 50);
         },
       });
     }
+
+    return () => {
+      clearTimeout(scrollCheckTimeout);
+    };
   }, [showSplash]);
 
   // Enhanced resize handler with debouncing
@@ -450,7 +495,7 @@ const MainLanding = () => {
 
       <video
         className="fixed inset-0 w-full h-full object-cover -z-10"
-        src="/videos/bg/home.mp4"
+        src="https://res.cloudinary.com/deg1fqn2b/video/upload/v1757686966/main_landing0001-0300_v00oj1.mp4"
         ref={(el) => {
           if (el) {
             el.muted = true;
@@ -462,13 +507,18 @@ const MainLanding = () => {
             }
           }
         }}
+        preload="metadata"
       />
 
       <NavMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
 
       <div
         ref={overlayRef}
-        className="fixed inset-10 z-10 flex justify-center items-center"
+        className="fixed inset-10 z-10 flex justify-center items-center overlay-logo"
+        style={{
+          transform: "translateY(0%)",
+          transition: "none", // Disable CSS transitions when GSAP is controlling
+        }}
       >
         <img
           src="/images/logomark_w.svg"
@@ -582,13 +632,13 @@ const MainLanding = () => {
                   style={{ transform: "translateX(0%)" }}
                 >
                   <video
-                    data-src="/videos/featured/akshat.mp4"
+                    src="https://res.cloudinary.com/deg1fqn2b/video/upload/v1757686391/BP_AKSHAT_12SEC_dobyrg.mp4"
                     className="feat-video absolute inset-0 w-full h-full object-cover rounded-3xl"
                     data-lazy="true"
                     loop
                     muted
                     playsInline
-                    preload="none"
+                    preload="metadata"
                   />
                   {/* gradient base so text remains readable */}
                   <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-3xl" />
@@ -619,13 +669,13 @@ const MainLanding = () => {
                   style={{ transform: "translateX(-100%)" }}
                 >
                   <video
-                    data-src="/videos/featured/oaken.mp4"
+                    src="https://res.cloudinary.com/deg1fqn2b/video/upload/v1757686391/Oaken_african_american_girl_in_grass_wide_shot_10_SEC_gqs0eh.mp4"
                     className="feat-video absolute inset-0 w-full h-full object-cover rounded-3xl"
                     data-lazy="true"
                     loop
                     muted
                     playsInline
-                    preload="none"
+                    preload="metadata"
                   />
                   <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-3xl" />
                   <div className="absolute top-4 left-4 z-30">
@@ -651,13 +701,13 @@ const MainLanding = () => {
                   style={{ transform: "translateX(-100%)" }}
                 >
                   <video
-                    data-src="/videos/featured/dzire.mp4"
+                    src="https://res.cloudinary.com/deg1fqn2b/video/upload/v1757686392/DZIRE_12_SEC_ynb1o3.mp4"
                     className="feat-video absolute inset-0 w-full h-full object-cover rounded-3xl"
                     data-lazy="true"
                     loop
                     muted
                     playsInline
-                    preload="none"
+                    preload="metadata"
                   />
                   <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-3xl" />
                   <div className="absolute top-4 left-4 z-30">
@@ -683,13 +733,13 @@ const MainLanding = () => {
                   style={{ transform: "translateX(-100%)" }}
                 >
                   <video
-                    data-src="/videos/featured/ballentines.mp4"
+                    src="https://res.cloudinary.com/deg1fqn2b/video/upload/v1757686393/BALLANTINES_12sec_b05jid.mp4"
                     className="feat-video absolute inset-0 w-full h-full object-cover rounded-3xl"
                     data-lazy="true"
                     loop
                     muted
                     playsInline
-                    preload="none"
+                    preload="metadata"
                   />
                   <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-3xl" />
                   <div className="absolute top-4 left-4 z-30">
@@ -715,13 +765,13 @@ const MainLanding = () => {
                   style={{ transform: "translateX(-100%)" }}
                 >
                   <video
-                    data-src="/videos/featured/kingfisher.mp4"
+                    src="https://res.cloudinary.com/deg1fqn2b/video/upload/v1757686384/KINGFISHER_10Sec_ai4s0g.mp4"
                     className="feat-video absolute inset-0 w-full h-full object-cover rounded-3xl"
                     data-lazy="true"
                     loop
                     muted
                     playsInline
-                    preload="none"
+                    preload="metadata"
                   />
                   <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-3xl" />
                   <div className="absolute top-4 left-4 z-30">
@@ -764,12 +814,12 @@ const MainLanding = () => {
             <figure className="group relative rounded-xl overflow-hidden md:col-span-6 md:row-span-2">
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                data-src={`/videos/other_work/06.mp4`}
+                src={`https://res.cloudinary.com/deg1fqn2b/video/upload/v1757687262/BP_KANIKA_13SEC_kozr9v.mp4`}
                 data-lazy="true"
                 loop
                 muted
                 playsInline
-                preload="none"
+                preload="metadata"
               />
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
@@ -797,12 +847,12 @@ const MainLanding = () => {
             <figure className="group relative rounded-xl overflow-hidden md:col-span-3 md:row-span-1">
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                data-src={`/videos/other_work/04.mp4`}
+                src={`https://res.cloudinary.com/deg1fqn2b/video/upload/v1757687254/VIVO_CLEAN_10_SEC_agcknb.mp4`}
                 data-lazy="true"
                 loop
                 muted
                 playsInline
-                preload="none"
+                preload="metadata"
               />
               {/* subtle base gradient so text is readable always */}
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
@@ -838,12 +888,12 @@ const MainLanding = () => {
             <figure className="group relative rounded-xl overflow-hidden md:col-span-3 md:row-span-1">
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                data-src={`/videos/other_work/07.mp4`}
+                src={`https://res.cloudinary.com/deg1fqn2b/video/upload/v1757687254/Chivas_11sec_ak3uef.mp4`}
                 data-lazy="true"
                 loop
                 muted
                 playsInline
-                preload="none"
+                preload="metadata"
               />
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
@@ -874,12 +924,12 @@ const MainLanding = () => {
             <figure className="group relative rounded-xl overflow-hidden md:col-span-2 md:row-span-3">
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                data-src={`/videos/other_work/01.mp4`}
+                src={`https://res.cloudinary.com/deg1fqn2b/video/upload/v1757687262/SOCIETY_TEA_12_SEC_rwefpp.mp4`}
                 data-lazy="true"
                 loop
                 muted
                 playsInline
-                preload="none"
+                preload="metadata"
               />
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
@@ -907,12 +957,12 @@ const MainLanding = () => {
             <figure className="group relative rounded-xl overflow-hidden md:col-span-2 md:row-span-3">
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                data-src={`/videos/other_work/03.mp4`}
+                src={`https://res.cloudinary.com/deg1fqn2b/video/upload/v1757687262/TATA_PUNCH_REVERSE_13_SEC_ldad0y.mp4`}
                 data-lazy="true"
                 loop
                 muted
                 playsInline
-                preload="none"
+                preload="metadata"
               />
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
@@ -944,12 +994,12 @@ const MainLanding = () => {
             <figure className="group relative rounded-xl overflow-hidden md:col-span-6 md:row-span-2">
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                data-src={`/videos/other_work/08.mp4`}
+                src={`https://res.cloudinary.com/deg1fqn2b/video/upload/v1757687259/FRONX_11secs_esybn5.mp4`}
                 data-lazy="true"
                 loop
                 muted
                 playsInline
-                preload="none"
+                preload="metadata"
               />
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
@@ -977,12 +1027,12 @@ const MainLanding = () => {
             <figure className="group relative rounded-xl overflow-hidden md:col-span-3 md:row-span-1">
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                data-src={`/videos/other_work/05.mp4`}
+                src={`https://res.cloudinary.com/deg1fqn2b/video/upload/v1757687267/BALENO_12_SEC_rnfde0.mp4`}
                 data-lazy="true"
                 loop
                 muted
                 playsInline
-                preload="none"
+                preload="metadata"
               />
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
@@ -1009,12 +1059,12 @@ const MainLanding = () => {
             <figure className="group relative rounded-xl overflow-hidden md:col-span-3 md:row-span-1">
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                data-src={`/videos/other_work/09.mp4`}
+                src={`https://res.cloudinary.com/deg1fqn2b/video/upload/v1757687261/Oaken_Glow_11_SEC_qvaeya.mp4`}
                 data-lazy="true"
                 loop
                 muted
                 playsInline
-                preload="none"
+                preload="metadata"
               />
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
@@ -1095,6 +1145,7 @@ export const Head = () => (
   <>
     <title>Epitome</title>
     <link rel="icon" href="/favicon.ico" />
+    <link rel="preload" />
   </>
 );
 

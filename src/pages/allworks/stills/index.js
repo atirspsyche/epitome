@@ -132,7 +132,7 @@ function AllWork() {
       <NavMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
       <video
         className="fixed inset-0 w-full h-full object-cover -z-10"
-        src="/videos/bg/home.mp4"
+        src="https://res.cloudinary.com/deg1fqn2b/video/upload/v1757686391/BP_AKSHAT_12SEC_dobyrg.mp4"
         autoPlay
         muted
         loop
