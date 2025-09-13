@@ -7,17 +7,19 @@ import { Link } from "gatsby";
 // import NavMenu from "../../components/menu";
 import NavMenu from "../../../components/menu";
 
+import brandList from "../../../data/digital-brand-list.json";
+
 gsap.registerPlugin(ScrollTrigger);
 
-const brandList = [
-  "Artlist",
-  "Society Tea",
-  "Brand 3",
-  "Brand 4",
-  "Brand 5",
-  "Brand 6",
-  "Brand 7",
-];
+// const brandList = [
+//   "Artlist",
+//   "Society Tea",
+//   "Brand 3",
+//   "Brand 4",
+//   "Brand 5",
+//   "Brand 6",
+//   "Brand 7",
+// ];
 
 function AllWork() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -150,11 +152,11 @@ function AllWork() {
       />
       <div className="fixed inset-10 z-10 flex justify-start items-end">
         <ul className="text-white text-2xl md:text-5xl font-heading tracking-tighter">
-          <li className="mb-10 text-6xl">Digital</li>
+          <li className="mb-10 text-7xl uppercase">Digital</li>
           {brandList.map((el, i) => (
             <li className="brand-list">
               <Link
-                className="opacity-30 transition-all duration-500 transform  md:hover:opacity-100 md:hover:text-6xl "
+                className="opacity-30 transition-all duration-500 transform  md:hover:opacity-100 md:hover:text-[3.2rem]"
                 to={`/work/digital/${el.replace(/\s+/g, "")}`}
               >
                 {el}

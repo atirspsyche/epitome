@@ -51,13 +51,7 @@ export const onClientEntry = () => {
             animation: loading 3s ease-in-out infinite;
           "></div>
         </div>
-        <p style="
-          color: #ccc;
-          font-size: 12px;
-          letter-spacing: 2px;
-          margin: 0;
-          opacity: 0.7;
-        ">LOADING EXPERIENCE...</p>
+
       </div>
       <style>
         @keyframes pulse {

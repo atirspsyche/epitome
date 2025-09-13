@@ -2,31 +2,15 @@ import React, { useEffect, useState } from "react";
 import gsap from "gsap";
 
 export default function NavMenu({ menuOpen, setMenuOpen }) {
-  const [openSubmenu, setOpenSubmenu] = useState(null); // for mobile/tap toggle
-  const [isMobile, setIsMobile] = useState(false);
-
-  // Check if mobile on mount and window resize
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
   const MENU = [
     { name: "HOME", link: "/" },
-    { name: "RECENT", link: "/" },
     {
       name: "WORK",
       link: "/allworks",
       submenu: [
-        { name: "Motion", link: "/allworks/motion" },
+        { name: "TVC", link: "/allworks/motion" },
         { name: "Short Films", link: "/allworks/films" },
-        { name: "Digital", link: "/allworks/motion" },
+        { name: "Digital", link: "/allworks/digital" },
         { name: "Stills", link: "/allworks/stills" },
       ],
     },
@@ -35,7 +19,6 @@ export default function NavMenu({ menuOpen, setMenuOpen }) {
 
   useEffect(() => {
     if (menuOpen) {
-      // animate top-level items in
       gsap.fromTo(
         ".menu-item",
         { y: -50, opacity: 0 },
@@ -48,7 +31,6 @@ export default function NavMenu({ menuOpen, setMenuOpen }) {
         }
       );
 
-      // animate submenu items a little later (if present)
       gsap.fromTo(
         ".submenu-item",
         { y: -12, opacity: 0 },
@@ -58,20 +40,14 @@ export default function NavMenu({ menuOpen, setMenuOpen }) {
           ease: "power2.out",
           duration: 1.3,
           stagger: 0.05,
-          delay: 0.35,
+          delay: 0.2,
         }
       );
     } else {
       gsap.to(".menu-item", { opacity: 0, y: -50, duration: 1.3 });
       gsap.to(".submenu-item", { opacity: 0, y: -12, duration: 1.3 });
-      setOpenSubmenu(null);
     }
   }, [menuOpen]);
-
-  // toggle submenu by name (for mobile)
-  function toggleSubmenu(name) {
-    setOpenSubmenu((prev) => (prev === name ? null : name));
-  }
 
   return (
     <>
@@ -80,7 +56,6 @@ export default function NavMenu({ menuOpen, setMenuOpen }) {
           <ul className="menu-items text-white text-5xl md:text-7xl sm:text-5xl font-heading tracking-tighter pl-8 space-y-8 w-full max-w-[720px]">
             {MENU.map((item) => {
               const hasSub = Array.isArray(item.submenu);
-              const isOpen = openSubmenu === item.name;
 
               return (
                 <li key={item.name} className="menu-item opacity-0 group">
@@ -89,48 +64,24 @@ export default function NavMenu({ menuOpen, setMenuOpen }) {
                     <a
                       href={item.link}
                       onClick={() => setMenuOpen(false)}
-                      className="transition-all duration-300 transform hover:opacity-30 md:hover:text-[5.2rem] "
+                      className="transition-all duration-300 transform hover:opacity-30 md:hover:text-[5.2rem]"
                     >
                       {item.name}
                     </a>
 
-                    {/* arrow / toggle only if submenu exists and not on mobile */}
-                    {hasSub && !isMobile && (
-                      // button so clicks don't navigate away
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          toggleSubmenu(item.name);
-                        }}
-                        aria-expanded={isOpen}
-                        aria-controls={`${item.name}-submenu`}
-                        className="ml-4 p-1 rounded-md transform transition-transform duration-300 group-hover:rotate-180"
-                      >
-                        {/* rotate arrow when open */}
-                        <span
-                          className={`inline-block transition-transform duration-300 ${
-                            isOpen ? "rotate-180" : "rotate-0"
-                          }`}
-                        >
-                          ▾
-                        </span>
-                      </button>
+                    {/* arrow (purely decorative now) */}
+                    {hasSub && (
+                      <span className="ml-4 p-1 rounded-md transform transition-transform duration-300 group-hover:rotate-180">
+                        ▾
+                      </span>
                     )}
                   </div>
 
-                  {/* SUBMENU - in normal flow so it pushes the next item down */}
+                  {/* SUBMENU - always visible */}
                   {hasSub && (
                     <ul
                       id={`${item.name}-submenu`}
-                      // Keep this in-flow (not absolute). Use max-h trick to animate height.
-                      className={`pl-10 mt-4 overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out ${
-                        // On mobile: always show submenus, on desktop: show on hover OR when toggled open
-                        isMobile
-                          ? "max-h-[300px] opacity-100"
-                          : `max-h-0 opacity-0 group-hover:max-h-[300px] group-hover:opacity-100 ${
-                              isOpen ? "max-h-[300px] opacity-100" : ""
-                            }`
-                      }`}
+                      className="pl-10 mt-4 opacity-100 max-h-none"
                     >
                       {item.submenu.map((sub) => (
                         <li
@@ -140,7 +91,7 @@ export default function NavMenu({ menuOpen, setMenuOpen }) {
                           <a
                             href={sub.link}
                             onClick={() => setMenuOpen(false)}
-                            className="block transition-all duration-300 transform hover:opacity-40 font-heading tracking-tighter uppercase hover:text-4xl "
+                            className="block transition-all duration-300 transform hover:opacity-40 font-heading tracking-tighter uppercase hover:text-4xl"
                           >
                             {sub.name}
                           </a>

@@ -141,7 +141,7 @@ function AllWork() {
       />
       <div className="fixed inset-10 z-10 flex justify-start items-end">
         <div className="text-white text-2xl md:text-5xl font-heading tracking-tighter ">
-          <div className="mb-10 text-6xl">Motion</div>
+          <div className="mb-10 text-7xl uppercase">Motion</div>
 
           <div className="flex gap-16">
             {/* Split into two columns */}
@@ -151,7 +151,7 @@ function AllWork() {
                 .map((el, i) => (
                   <li key={i} className="brand-list">
                     <Link
-                      className="opacity-30 transition-all duration-500 transform md:hover:opacity-100 md:hover:text-6xl"
+                      className="opacity-30 transition-all duration-500 transform md:hover:opacity-100 md:hover:text-[3.2rem]"
                       to={`/work/motion/${el.replace(/\s+/g, "")}`}
                     >
                       {el}
@@ -164,7 +164,7 @@ function AllWork() {
               {brandList.slice(Math.ceil(brandList.length / 2)).map((el, i) => (
                 <li key={i} className="brand-list">
                   <Link
-                    className="opacity-30 transition-all duration-500 transform md:hover:opacity-100 md:hover:text-6xl"
+                    className="opacity-30 transition-all duration-500 transform md:hover:opacity-100 md:hover:text-[3.2rem]"
                     to={`/work/motion/${el.replace(/\s+/g, "")}`}
                   >
                     {el}

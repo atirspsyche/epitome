@@ -140,11 +140,11 @@ function AllWork() {
       />
       <div className="fixed inset-10 z-10 flex justify-start items-end">
         <ul className="text-white text-2xl md:text-5xl font-heading tracking-tighter">
-          <li className="mb-10 text-6xl">Short Films</li>
+          <li className="mb-10 text-7xl uppercase">Short Films</li>
           {brandList.map((el, i) => (
             <li className="brand-list">
               <Link
-                className="opacity-30 transition-all duration-500 transform  md:hover:opacity-100 md:hover:text-6xl "
+                className="opacity-30 transition-all duration-500 transform  md:hover:opacity-100 md:hover:text-[3.2rem]"
                 to={`/work/films/${el.replace(/\s+/g, "")}`}
               >
                 {el}

@@ -566,34 +566,34 @@ const MainLanding = () => {
             <div className="space-y-8">
               {[
                 {
-                  src: "/videos/featured/akshat.mp4",
+                  src: "https://res.cloudinary.com/deg1fqn2b/video/upload/v1757686391/BP_AKSHAT_12SEC_dobyrg.mp4",
                   title: "BPFT 2025",
-                  subtitle: "Brand Film",
+                  subtitle: "Premium Promo Films",
                   href: "/work/motion/BPFT2025",
                 },
                 {
-                  src: "/videos/featured/oaken.mp4",
-                  title: "Oaken",
-                  subtitle: "Product",
+                  src: "https://res.cloudinary.com/deg1fqn2b/video/upload/v1757686391/Oaken_african_american_girl_in_grass_wide_shot_10_SEC_gqs0eh.mp4",
+                  title: "Oaken Glow",
+                  subtitle: "Product Film",
                   href: "/work/motion/oaken",
                 },
                 {
-                  src: "/videos/featured/dzire.mp4",
-                  title: "Dzire",
-                  subtitle: "Commercial",
+                  src: "https://res.cloudinary.com/deg1fqn2b/video/upload/v1757686392/DZIRE_12_SEC_ynb1o3.mp4",
+                  title: "Suzuki Dzire",
+                  subtitle: "Virtual Production Commercial",
                   href: "/work/motion/dzire",
                 },
                 {
-                  src: "/videos/featured/ballentines.mp4",
-                  title: "Ballentines",
-                  subtitle: "TVC",
+                  src: "https://res.cloudinary.com/deg1fqn2b/video/upload/v1757686393/BALLANTINES_12sec_b05jid.mp4",
+                  title: "Ballantine Stay True",
+                  subtitle: "Film",
                   href: "/work/motion/BallantineStayTrue",
                 },
                 {
-                  src: "/videos/featured/kingfisher.mp4",
+                  src: "https://res.cloudinary.com/deg1fqn2b/video/upload/v1757686384/KINGFISHER_10Sec_ai4s0g.mp4",
                   title: "Kingfisher",
-                  subtitle: "Film",
-                  href: "/work/kingfisher",
+                  subtitle: "Brand Film",
+                  href: "/work/motion/kingfisher",
                 },
               ].map((item, i) => (
                 <a
@@ -760,7 +760,7 @@ const MainLanding = () => {
                 </a>
 
                 <a
-                  href="/work/motion/BallantineStayTrue"
+                  href="/work/motion/kingfisher"
                   className="feat-card group absolute inset-0 z-50 rounded-3xl block"
                   style={{ transform: "translateX(-100%)" }}
                 >
@@ -1088,36 +1088,6 @@ const MainLanding = () => {
 
               <span className="sr-only">Video: Oaken Glow</span>
             </figure>
-            {/* <figure className="group relative rounded-xl overflow-hidden md:col-span-6 md:row-span-1">
-              <video
-                className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                src={`/videos/other_work/02.mp4`}
-                autoPlay
-                loop
-                muted
-                playsInline
-              />
-              <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-
-              <figcaption className="absolute top-4 left-4 z-20">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/50 backdrop-blur-sm text-white text-sm font-medium">
-                  Tata Punch
-                </div>
-              </figcaption>
-
-              <div className="absolute inset-0 z-10 flex items-center justify-center px-4">
-                <div className="transform translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out text-center pointer-events-none">
-                  <h4 className="text-white text-2xl sm:text-3xl font-heading tracking-tighter uppercase tracking-wide drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)]">
-                    Tata Punch
-                  </h4>
-                  <div className="mt-2 opacity-80 text-xs text-white">
-                    Social cut
-                  </div>
-                </div>
-              </div>
-
-              <span className="sr-only">Video: Tata Punch</span>
-            </figure> */}
           </div>
 
           {/* show all row */}

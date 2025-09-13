@@ -1,0 +1,118 @@
+import React, { useRef, useEffect, useState } from "react";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Footer from "../components/footer";
+import NavMenu from "../components/menu";
+import BrandShowcase from "../components/brand-showcase-digital";
+
+gsap.registerPlugin(ScrollTrigger);
+
+export default function BrandPage({ pageContext }) {
+  const brand = pageContext;
+  const [menuOpen, setMenuOpen] = useState(false);
+  const bgVidRef = useRef();
+
+  // Lazy video play/pause for any data-lazy videos (gallery videos in BrandShowcase)
+  useEffect(() => {
+    const videos = document.querySelectorAll("video[data-lazy]");
+    if (!videos.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const video = entry.target;
+          if (entry.isIntersecting) {
+            if (video.paused) video.play().catch(() => {});
+          } else {
+            if (!video.paused) video.pause();
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: "50px" }
+    );
+    videos.forEach((v) => observer.observe(v));
+    return () => videos.forEach((v) => observer.unobserve(v));
+  }, []);
+
+  // Custom cursor
+  useEffect(() => {
+    const cursor = document.getElementById("custom-cursor");
+    if (!cursor) return;
+
+    // Only show custom cursor on desktop (768px and above)
+    const isMobile = window.innerWidth < 768;
+
+    if (isMobile) {
+      cursor.style.display = "none";
+      return;
+    }
+
+    cursor.style.display = "block";
+
+    const move = (e) => {
+      cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+    };
+
+    const handleResize = () => {
+      const isMobileResize = window.innerWidth < 768;
+      cursor.style.display = isMobileResize ? "none" : "block";
+    };
+
+    window.addEventListener("mousemove", move);
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("mousemove", move);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  if (!brand) return <div>Brand not found</div>;
+
+  return (
+    <main className="relative cursor-none bg-secondary">
+      <div
+        id="custom-cursor"
+        className="z-50 pointer-events-none fixed top-0 left-0 w-4 h-4 bg-gray-500 rounded-full border-2 border-gray-300/50 transform -translate-x-1/2 -translate-y-1/2 transition-transform duration-100 ease-out"
+      />
+      <header className="fixed inset-x-0 top-0 z-40 h-20 overflow-hidden transition-colors duration-300 bg-secondary">
+        <div className="relative flex z-10 items-center justify-between h-full px-8">
+          <a href="/">
+            <img
+              src="/images/logo_combination.png"
+              alt="Logo Text"
+              className="h-10 sm:h-14 hover:opacity-70 transition-opacity duration-500 ease-in-out"
+            />
+          </a>
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="relative w-10 h-10 focus:outline-none"
+          >
+            <Bars3Icon
+              className={`absolute inset-0 w-full h-full text-primary transition-opacity duration-500 ease-in-out ${
+                menuOpen
+                  ? "opacity-0 scale-75 rotate-45"
+                  : "opacity-100 scale-100 rotate-0"
+              }`}
+            />
+            <XMarkIcon
+              className={`absolute inset-0 w-full h-full text-primary transition-opacity duration-500 ease-in-out ${
+                menuOpen
+                  ? "opacity-100 scale-100 rotate-0"
+                  : "opacity-0 scale-75 rotate-45"
+              }`}
+            />
+          </button>
+        </div>
+      </header>
+      <NavMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
+      <BrandShowcase brand={brand} />
+      <div className="relative pt-10">
+        <div className="absolute inset-x-0 top-1/2 h-0.5 bg-gradient-to-r from-transparent via-coralRed to-transparent" />
+      </div>
+      <div className="relative">
+        <Footer />
+      </div>
+    </main>
+  );
+}

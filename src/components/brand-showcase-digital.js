@@ -1,5 +1,4 @@
 import React from "react";
-import ReactPlayer from "react-player";
 import useSimpleVideoObserver from "./simple-video-observer";
 
 // Displays background video, brand hero info, about/credits, and gallery grids
@@ -16,7 +15,7 @@ export default function BrandShowcase({ brand }) {
       return (
         <img
           key={key}
-          src={`${item.url}`}
+          src={`/images/${item.url}`}
           className={
             fullCover
               ? "inset-0 w-full h-full object-cover rounded-xl"
@@ -30,7 +29,7 @@ export default function BrandShowcase({ brand }) {
     return (
       <video
         key={key}
-        src={`${item.url}`}
+        src={`/videos/${item.url}`}
         className="w-full h-auto object-cover feat-video rounded-xl"
         data-lazy="true"
         muted
@@ -44,68 +43,9 @@ export default function BrandShowcase({ brand }) {
 
   return (
     <>
-      {/* Background Video */}
-      <div className="fixed inset-0 object-cover z-0 pointer-events-auto overflow-hidden bg-black pt-10">
-        <ReactPlayer
-          src={brand.main_video_url}
-          playing={true}
-          muted={true}
-          loop={true}
-          width="100%"
-          height="100%"
-          config={{
-            vimeo: {
-              playerOptions: {
-                background: true,
-                controls: true,
-                title: false,
-                byline: false,
-                portrait: false,
-                autoplay: true,
-                autopause: false,
-                muted: true,
-                responsive: true,
-              },
-            },
-          }}
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            width: "100vw",
-            height: "100vh",
-            transform: "translate(-50%, -50%)",
-            minWidth: "100%",
-            minHeight: "100%",
-          }}
-          className="react-player-crop"
-          controls={true}
-        />
+      <div className="relative grid md:grid-cols-2 text-primary text-5xl md:text-7xl bg-neutral-900 z-10 px-16 py-10 gap-10 pt-36 font-heading leading-tight">
+        {brand.brand_name}
       </div>
-
-      {/* Brand Hero Text */}
-      {/* <div className="h-[90vh]"></div> */}
-      <div
-        className="z-10 relative text-primary px-8 py-14 w-fit"
-        style={{ height: "90vh", top: "65vh" }}
-      >
-        <div className="font-heading tracking-tighter backdrop-blur-xl bg-white/5  rounded-2xl p-8 shadow-2xl ">
-          <div className="uppercase font-heading tracking-tighter text-5xl md:text-8xl leading-tight text-left text-primary">
-            {brand.brand_name}
-          </div>
-          {brand.subtitle && (
-            <div className="text-2xl md:text-4xl text-primary pt-4">
-              {brand.subtitle}
-            </div>
-          )}
-          {brand.pagination_text && (
-            <div className=" text-primary pt-3">{brand.pagination_text}</div>
-          )}
-        </div>
-      </div>
-      <div className="h-[10vh] -z-10 relative" />
-
-      {/* About & Credits */}
       <div className="relative grid md:grid-cols-2 bg-neutral-900 z-10 px-16 py-10 gap-10">
         <div>
           <div className="font-heading tracking-tighter text-3xl uppercase leading-tight text-neutral-300 font-bold">
@@ -135,7 +75,7 @@ export default function BrandShowcase({ brand }) {
       </div>
 
       {/* Gallery Pattern */}
-      <div className="bg-secondary relative grid md:grid-cols-2 gap-10 px-10 ">
+      {/* <div className="bg-secondary relative grid md:grid-cols-2 gap-10 px-10 ">
         <div className="md:col-span-2 object-cover relative min-h-[50vh]">
           {renderMedia(safeItem(0), 0, true)}
         </div>
@@ -159,6 +99,34 @@ export default function BrandShowcase({ brand }) {
         <div className="md:col-span-2 relative min-h-[50vh]">
           {renderMedia(safeItem(6), 6, true)}
         </div>
+      </div> */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 bg-secondary px-10">
+        {brand.grids_media.map((v, i) => (
+          <div
+            key={v.url + i}
+            className="relative rounded-xl overflow-hidden shadow-sm bg-gray-900"
+          >
+            <div className="relative" style={{ aspectRatio: "9/16" }}>
+              <video
+                data-lazy
+                src={v.url}
+                muted
+                // playsInline
+                // remove controls if you want autoplay-only and a custom control UI
+                controls
+                className="w-full h-full object-cover aspect-video"
+                preload="metadata"
+              />
+            </div>
+
+            {/* overlay name */}
+            {/* {v.name && (
+              <div className="absolute left-3 bottom-3 bg-black/50 px-3 py-1 rounded text-sm text-white">
+                {v.name}
+              </div>
+            )} */}
+          </div>
+        ))}
       </div>
     </>
   );

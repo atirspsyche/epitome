@@ -8,10 +8,46 @@ import NavMenu from "../../components/menu";
 gsap.registerPlugin(ScrollTrigger);
 
 const images = [
-  { src: "/images/text-logo.png", alt: "Image 1", rotate: "-rotate-3" },
-  { src: "/images/logomark_w.svg", alt: "Image 2", rotate: "rotate-2" },
-  { src: "/images/logo_type_w.png", alt: "Image 3", rotate: "-rotate-2" },
-  { src: "/images/icon-logo.png", alt: "Image 4", rotate: "rotate-1" },
+  {
+    src: "/images/about_brand/aditya_birla.png",
+    alt: "Image 1",
+    rotate: "-rotate-3",
+  },
+  {
+    src: "/images/about_brand/cocacola.png",
+    alt: "Image 2",
+    rotate: "rotate-2",
+  },
+  {
+    src: "/images/about_brand/harpers_bazaar.png",
+    alt: "Image 3",
+    rotate: "-rotate-2",
+  },
+  {
+    src: "/images/about_brand/infosys.png",
+    alt: "Image 4",
+    rotate: "rotate-1",
+  },
+  {
+    src: "/images/about_brand/kingfisher.png",
+    alt: "Image 4",
+    rotate: "rotate-2",
+  },
+  { src: "/images/about_brand/nike.png", alt: "Image 4", rotate: "rotate-3" },
+  {
+    src: "/images/about_brand/pernord.png",
+    alt: "Image 4",
+    rotate: "rotate-1",
+  },
+  {
+    src: "/images/about_brand/samsung.png",
+    alt: "Image 4",
+    rotate: "rotate-2",
+  },
+  { src: "/images/about_brand/suzuki.png", alt: "Image 4", rotate: "rotate-3" },
+  { src: "/images/about_brand/tata.png", alt: "Image 4", rotate: "rotate-2" },
+  { src: "/images/about_brand/vivo.png", alt: "Image 4", rotate: "rotate-1" },
+  { src: "/images/about_brand/zara.png", alt: "Image 4", rotate: "rotate-3" },
 ];
 const allImages = [...images, ...images, ...images, ...images, ...images];
 export default function AboutPage() {
