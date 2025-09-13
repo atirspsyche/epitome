@@ -42,6 +42,7 @@ export default function BrandShowcase({ brand }) {
     );
   };
 
+  console.log(brand);
   return (
     <>
       {/* Background Video */}
