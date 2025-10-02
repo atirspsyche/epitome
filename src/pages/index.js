@@ -495,7 +495,7 @@ const MainLanding = () => {
 
       <video
         className="fixed inset-0 w-full h-full object-cover -z-10"
-        src="https://res.cloudinary.com/deg1fqn2b/video/upload/v1757686966/main_landing0001-0300_v00oj1.mp4"
+        src="https://res.cloudinary.com/deg1fqn2b/video/upload/f_auto/v1757686966/main_landing0001-0300_v00oj1.mp4"
         ref={(el) => {
           if (el) {
             el.muted = true;
@@ -566,31 +566,32 @@ const MainLanding = () => {
             <div className="space-y-8">
               {[
                 {
-                  src: "https://res.cloudinary.com/deg1fqn2b/video/upload/v1757686391/BP_AKSHAT_12SEC_dobyrg.mp4",
+                  src: "https://res.cloudinary.com/deg1fqn2b/video/upload/f_auto,w_auto,dpr_auto/v1757686391/BP_AKSHAT_12SEC_dobyrg.mp4",
                   title: "BPFT 2025",
                   subtitle: "Premium Promo Films",
                   href: "/work/motion/BPFT2025",
                 },
                 {
-                  src: "https://res.cloudinary.com/deg1fqn2b/video/upload/v1757686391/Oaken_african_american_girl_in_grass_wide_shot_10_SEC_gqs0eh.mp4",
+                  src: "https://res.cloudinary.com/deg1fqn2b/video/upload/f_auto,w_auto,dpr_auto/v1757686391/Oaken_african_american_girl_in_grass_wide_shot_10_SEC_gqs0eh.mp4",
                   title: "Oaken Glow",
                   subtitle: "Product Film",
                   href: "/work/motion/oaken",
                 },
                 {
-                  src: "https://res.cloudinary.com/deg1fqn2b/video/upload/v1757686392/DZIRE_12_SEC_ynb1o3.mp4",
+                  src: "https://res.cloudinary.com/de1pkh4a2/video/upload/f_auto,w_auto,dpr_auto/v1758203728/DZIRE_12_SEC_coa7tv.mp4",
                   title: "Suzuki Dzire",
                   subtitle: "Virtual Production Commercial",
                   href: "/work/motion/dzire",
                 },
                 {
-                  src: "https://res.cloudinary.com/deg1fqn2b/video/upload/v1757686393/BALLANTINES_12sec_b05jid.mp4",
+                  src: "https://res.cloudinary.com/de1pkh4a2/video/upload/f_auto,w_auto,dpr_auto/v1758203739/BALLANTINES_12sec_s6ifrc.mp4",
+                  // src: "https://res.cloudinary.com/deg1fqn2b/video/upload/f_auto,w_auto,dpr_auto/v1757686393/BALLANTINES_12sec_b05jid.mp4",
                   title: "Ballantine Stay True",
                   subtitle: "Film",
                   href: "/work/motion/BallantineStayTrue",
                 },
                 {
-                  src: "https://res.cloudinary.com/deg1fqn2b/video/upload/v1757686384/KINGFISHER_10Sec_ai4s0g.mp4",
+                  src: "https://res.cloudinary.com/de1pkh4a2/video/upload/f_auto,w_auto,dpr_auto/v1758203727/KINGFISHER_10Sec_s9eij8.mp4",
                   title: "Kingfisher",
                   subtitle: "Brand Film",
                   href: "/work/motion/kingfisher",
@@ -632,7 +633,7 @@ const MainLanding = () => {
                   style={{ transform: "translateX(0%)" }}
                 >
                   <video
-                    src="https://res.cloudinary.com/deg1fqn2b/video/upload/v1757686391/BP_AKSHAT_12SEC_dobyrg.mp4"
+                    src="https://res.cloudinary.com/deg1fqn2b/video/upload/f_auto,w_auto,dpr_auto/v1757686391/BP_AKSHAT_12SEC_dobyrg.mp4"
                     className="feat-video absolute inset-0 w-full h-full object-cover rounded-3xl"
                     data-lazy="true"
                     loop
@@ -669,7 +670,7 @@ const MainLanding = () => {
                   style={{ transform: "translateX(-100%)" }}
                 >
                   <video
-                    src="https://res.cloudinary.com/deg1fqn2b/video/upload/v1757686391/Oaken_african_american_girl_in_grass_wide_shot_10_SEC_gqs0eh.mp4"
+                    src="https://res.cloudinary.com/deg1fqn2b/video/upload/f_auto,w_auto,dpr_auto/v1757686391/Oaken_african_american_girl_in_grass_wide_shot_10_SEC_gqs0eh.mp4"
                     className="feat-video absolute inset-0 w-full h-full object-cover rounded-3xl"
                     data-lazy="true"
                     loop
@@ -701,7 +702,7 @@ const MainLanding = () => {
                   style={{ transform: "translateX(-100%)" }}
                 >
                   <video
-                    src="https://res.cloudinary.com/deg1fqn2b/video/upload/v1757686392/DZIRE_12_SEC_ynb1o3.mp4"
+                    src="https://res.cloudinary.com/de1pkh4a2/video/upload/f_auto,w_auto,dpr_auto/v1758203728/DZIRE_12_SEC_coa7tv.mp4"
                     className="feat-video absolute inset-0 w-full h-full object-cover rounded-3xl"
                     data-lazy="true"
                     loop
@@ -733,7 +734,7 @@ const MainLanding = () => {
                   style={{ transform: "translateX(-100%)" }}
                 >
                   <video
-                    src="https://res.cloudinary.com/deg1fqn2b/video/upload/v1757686393/BALLANTINES_12sec_b05jid.mp4"
+                    src="https://res.cloudinary.com/de1pkh4a2/video/upload/f_auto,w_auto,dpr_auto/v1758203739/BALLANTINES_12sec_s6ifrc.mp4"
                     className="feat-video absolute inset-0 w-full h-full object-cover rounded-3xl"
                     data-lazy="true"
                     loop
@@ -765,7 +766,7 @@ const MainLanding = () => {
                   style={{ transform: "translateX(-100%)" }}
                 >
                   <video
-                    src="https://res.cloudinary.com/deg1fqn2b/video/upload/v1757686384/KINGFISHER_10Sec_ai4s0g.mp4"
+                    src="https://res.cloudinary.com/de1pkh4a2/video/upload/f_auto,w_auto,dpr_auto/v1758203727/KINGFISHER_10Sec_s9eij8.mp4"
                     className="feat-video absolute inset-0 w-full h-full object-cover rounded-3xl"
                     data-lazy="true"
                     loop
@@ -814,7 +815,7 @@ const MainLanding = () => {
             <figure className="group relative rounded-xl overflow-hidden md:col-span-6 md:row-span-2">
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                src={`https://res.cloudinary.com/deg1fqn2b/video/upload/v1757687262/BP_KANIKA_13SEC_kozr9v.mp4`}
+                src={`https://res.cloudinary.com/deg1fqn2b/video/upload/f_auto,w_auto,dpr_auto/v1757687262/BP_KANIKA_13SEC_kozr9v.mp4`}
                 data-lazy="true"
                 loop
                 muted
@@ -847,7 +848,7 @@ const MainLanding = () => {
             <figure className="group relative rounded-xl overflow-hidden md:col-span-3 md:row-span-1">
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                src={`https://res.cloudinary.com/deg1fqn2b/video/upload/v1757687254/VIVO_CLEAN_10_SEC_agcknb.mp4`}
+                src={`https://res.cloudinary.com/deg1fqn2b/video/upload/f_auto,w_auto,dpr_auto/v1757687254/VIVO_CLEAN_10_SEC_agcknb.mp4`}
                 data-lazy="true"
                 loop
                 muted
@@ -888,7 +889,7 @@ const MainLanding = () => {
             <figure className="group relative rounded-xl overflow-hidden md:col-span-3 md:row-span-1">
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                src={`https://res.cloudinary.com/deg1fqn2b/video/upload/v1757687254/Chivas_11sec_ak3uef.mp4`}
+                src={`https://res.cloudinary.com/deg1fqn2b/video/upload/f_auto,w_auto,dpr_auto/v1757687254/Chivas_11sec_ak3uef.mp4`}
                 data-lazy="true"
                 loop
                 muted
@@ -924,7 +925,7 @@ const MainLanding = () => {
             <figure className="group relative rounded-xl overflow-hidden md:col-span-2 md:row-span-3">
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                src={`https://res.cloudinary.com/deg1fqn2b/video/upload/v1757687262/SOCIETY_TEA_12_SEC_rwefpp.mp4`}
+                src={`https://res.cloudinary.com/de1pkh4a2/video/upload/f_auto,w_auto,dpr_auto/v1758203858/SOCIETY_TEA_12_SEC_n4pwnf.mp4`}
                 data-lazy="true"
                 loop
                 muted
@@ -957,7 +958,7 @@ const MainLanding = () => {
             <figure className="group relative rounded-xl overflow-hidden md:col-span-2 md:row-span-3">
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                src={`https://res.cloudinary.com/deg1fqn2b/video/upload/v1757687262/TATA_PUNCH_REVERSE_13_SEC_ldad0y.mp4`}
+                src={`https://res.cloudinary.com/de1pkh4a2/video/upload/f_auto,w_auto,dpr_auto/v1758203853/TATA_PUNCH_REVERSE_13_SEC_go50fo.mp4`}
                 data-lazy="true"
                 loop
                 muted
@@ -994,7 +995,7 @@ const MainLanding = () => {
             <figure className="group relative rounded-xl overflow-hidden md:col-span-6 md:row-span-2">
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                src={`https://res.cloudinary.com/deg1fqn2b/video/upload/v1757687259/FRONX_11secs_esybn5.mp4`}
+                src={`https://res.cloudinary.com/deg1fqn2b/video/upload/f_auto,w_auto,dpr_auto/v1757687259/FRONX_11secs_esybn5.mp4`}
                 data-lazy="true"
                 loop
                 muted
@@ -1027,7 +1028,7 @@ const MainLanding = () => {
             <figure className="group relative rounded-xl overflow-hidden md:col-span-3 md:row-span-1">
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                src={`https://res.cloudinary.com/deg1fqn2b/video/upload/v1757687267/BALENO_12_SEC_rnfde0.mp4`}
+                src={`https://res.cloudinary.com/de1pkh4a2/video/upload/f_auto,w_auto,dpr_auto/v1758203847/BALENO_12_SEC_kkokqg.mp4`}
                 data-lazy="true"
                 loop
                 muted
@@ -1059,7 +1060,7 @@ const MainLanding = () => {
             <figure className="group relative rounded-xl overflow-hidden md:col-span-3 md:row-span-1">
               <video
                 className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                src={`https://res.cloudinary.com/deg1fqn2b/video/upload/v1757687261/Oaken_Glow_11_SEC_qvaeya.mp4`}
+                src={`https://res.cloudinary.com/de1pkh4a2/video/upload/f_auto,w_auto,dpr_auto/v1758204383/Oaken_Glow_11_SEC_qnhbbp.mp4`}
                 data-lazy="true"
                 loop
                 muted

@@ -132,11 +132,12 @@ function AllWork() {
       <NavMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
       <video
         className="fixed inset-0 w-full h-full object-cover -z-10"
-        src="https://res.cloudinary.com/deg1fqn2b/video/upload/v1757686391/BP_AKSHAT_12SEC_dobyrg.mp4"
+        src="https://res.cloudinary.com/deg1fqn2b/video/upload/f_auto/v1757686391/BP_AKSHAT_12SEC_dobyrg.mp4"
         autoPlay
         muted
         loop
         playsInline
+        preload="auto"
       />
       <div className="fixed inset-10 z-10 flex justify-start items-end">
         <ul className="text-white text-2xl md:text-5xl font-heading tracking-tighter">
